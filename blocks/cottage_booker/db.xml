@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+    <table name="btCottageBooker">
+        <field name="bID" type="I">
+            <key />
+            <unsigned />
+        </field>
+        <field name="creditsPerWeekDay" type="F">
+            <default value="1"/>
+        </field>
+        <field name="creditsPerWeekendDay" type="F">
+            <default value="2"/>
+        </field>
+                <field name="userCreditsMax" type="F">
+            <default value="126"/>
+        </field>
+                <field name="userCreditsAnnual" type="F">
+            <default value="42"/>
+        </field>
+        <field name="cottageName" type="C" size="255">
+        </field>
+        <field name="canBookCancelledBookings" type="I1">
+            <default value="0"/>
+        </field>
+                <field name="changeDay" type="I">
+            <unsigned />
+        </field>
+        <field name="adminGroup" type="I">
+            <unsigned />
+        </field>
+        <field name="userGroup" type="I">
+            <unsigned />
+        </field>
+    </table>
+    <table name="btCottageBookerBookings">
+        <field name="bID" type="I">
+        </field>
+        <field name="entryID" type="I">
+            <key/>
+            <autoincrement/>
+        </field>
+        <field name="uID" type="I">
+            <default value="0"/>
+        </field>
+        <field name="start" type="D">
+        </field>
+        <field name="end" type="D">
+        </field>
+        <field name="credits" type="F">
+            <default value="1"/>
+        </field>
+        <field name="notes" type="X">
+        </field>
+        <field name="last_modified" type="D">
+        </field>
+        <field name="persons" type="I">
+            <default value="1"/>
+        </field>
+        <index name="bID">
+            <col>bID</col>
+        </index>
+    </table>
+    <table name="btCottageBookerExceptions">
+        <field name="bID" type="I">
+        </field>
+        <field name="entryID" type="I">
+            <key/>
+            <autoincrement/>
+        </field>
+        <field name="uID" type="I">
+            <default value="0"/>
+        </field>
+        <field name="start" type="D">
+        </field>
+        <field name="end" type="D">
+        </field>
+        <field name="credits" type="F">
+            <default value="1"/>
+        </field>
+        <field name="bookOnlyWeeks" type="I1">
+        </field>
+                <field name="maxNumberOfDays" type="I">
+                </field>
+        <field name="notes" type="X">
+        </field>
+        <index name="bID">
+            <col>bID</col>
+        </index>
+    </table>
+    <table name="btCottageBookerCancelled">
+        <field name="bID" type="I">
+        </field>
+        <field name="entryID" type="I">
+            <key/>
+            <autoincrement/>
+        </field>
+        <field name="uID" type="I">
+            <default value="0"/>
+        </field>
+        <field name="start" type="D">
+        </field>
+        <field name="end" type="D">
+        </field>
+        <field name="credits" type="F">
+            <default value="1"/>
+        </field>
+        <field name="notes" type="X">
+        </field>
+        <field name="persons" type="I">
+            <default value="1"/>
+        </field>
+        <index name="bID">
+            <col>bID</col>
+        </index>
+    </table>
+</schema>
