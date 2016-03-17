@@ -2,60 +2,51 @@
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-class CottageBookerBlockController extends BlockController {
+class CottageBookerBlockController extends BlockController
+{
 
     protected $btTable = "btCottageBooker";
     protected $btInterfaceWidth = "350";
     protected $btInterfaceHeight = "300";
-    protected $btIncludeAll = true; // This has to be on otherwise duplicate() kills the reservations.
+    /**
+     * This has to be on otherwise duplicate()
+     * kills the reservations.
+     */
+    protected $btIncludeAll = true;
     protected $btWrapperClass = 'ccm-ui';
 
-    public function getBlockTypeName() {
+    public function getBlockTypeName()
+    {
         return t('Cottage Booker');
     }
 
-    public function getBlockTypeDescription() {
+    public function getBlockTypeDescription()
+    {
         return t('A calendar interface to the booking system.');
     }
 
-    public function view() {
-        $oUser = new user();
-        $uId = $oUser->getUserID();
-        $oUserInfo = UserInfo::getByID($uId);
-        if($this->isLoggedIn() === true){
-            $this->set('loggedIn', true);
-            $this->set('userFullName', $oUserInfo->getUserFullName());
-            $this->set('userCredits', $oUserInfo->getUserCottageBookerCredits());
-            $this->set('schelpenPerDag', $this->creditsPerWeekDay);
-            $this->set('schelpenPerWeekendDag', $this->creditsPerWeekendDay);
-        }else{
-            $this->set('loggedIn', false);
-        }
-
-        $adminPage = Page::getByPath('/dashboard/cottage_booker', $version = 'active');
-        $p = new Permissions($adminPage);
-
-        if($p->canRead()){
-            $this->set('adminPageLink', '/dashboard/cottage_booker');
-        }else{
-            $this->set('adminPageLink', false);
-        }
+    public function view()
+    {
+        $this->_initUser();
+        $this->_setAdminPageLink();
     }
+
 
     public function formatRequiredFieldsMessage($aRequiredFields)
     {
-        $sMessage = '<p>'.t('De volgende velden zijn niet ingevuld:').'</p>';
+        $sMessage = '<p>' . t('De volgende velden zijn niet ingevuld:') . '</p>';
         $sMessage .= '<ul>';
-        foreach($aRequiredFields as $sName => $sValue){
-            if(empty($sValue)){
-                $sMessage .= '<li>'.$sName.'</li>';
+        foreach ($aRequiredFields as $sName => $sValue) {
+            if (empty($sValue)) {
+                $sMessage .= '<li>' . $sName . '</li>';
             }
         }
         $sMessage .= '</ul>';
         return $sMessage;
     }
 
-    public function action_new() {
+    public function actionNew()
+    {
         $oUser = new user();
         $uId = $oUser->getUserID();
 
@@ -77,11 +68,11 @@ class CottageBookerBlockController extends BlockController {
             $oResponse->status = $aResponse['status'];
         } else {
             $oResponse->message = t("Er is iets fout gegaan bij het reserveren. Probeer het later nog eens.") . $this->formatRequiredFieldsMessage(
-                            array(
-                                t('Begindatum') => $sStart,
-                                t('Einddatum') => $sEnd,
-                                t('Aantal personen') => $iPersons,
-                            )
+                array(
+                    t('Begindatum') => $sStart,
+                    t('Einddatum') => $sEnd,
+                    t('Aantal personen') => $iPersons,
+                )
             );
 
             $oResponse->status = 'error';
@@ -94,7 +85,8 @@ class CottageBookerBlockController extends BlockController {
         exit;
     }
 
-    public function action_update() {
+    public function actionUpdate()
+    {
         $oUser = new user();
         $uId = $oUser->getUserID();
 
@@ -117,11 +109,11 @@ class CottageBookerBlockController extends BlockController {
             $oResponse->status = $aResponse['status'];
         } else {
             $oResponse->message = t("Er is iets fout gegaan bij het bewerken van de reservering. Probeer het nog eens.") . $this->formatRequiredFieldsMessage(
-                            array(
-                                t('Begindatum') => $sStart,
-                                t('Einddatum') => $sEnd,
-                                t('Aantal personen') => $iPersons,
-                            )
+                array(
+                    t('Begindatum') => $sStart,
+                    t('Einddatum') => $sEnd,
+                    t('Aantal personen') => $iPersons,
+                )
             );
             $oResponse->status = 'error';
         }
@@ -133,7 +125,8 @@ class CottageBookerBlockController extends BlockController {
         exit;
     }
 
-    public function action_delete() {
+    public function actionDelete()
+    {
         $oUser = new user();
         $uId = $oUser->getUserID();
 
@@ -157,7 +150,8 @@ class CottageBookerBlockController extends BlockController {
         exit;
     }
 
-    public function action_fetchall() {
+    public function actionFetchall()
+    {
         $oUser = new user();
         $uId = $oUser->getUserID();
 
@@ -184,7 +178,8 @@ class CottageBookerBlockController extends BlockController {
         exit;
     }
 
-    public function action_fetchallexceptions() {
+    public function actionFetchallexceptions()
+    {
         $aEvents = $this->fetchAllExceptions();
         $aResponse = array();
 
@@ -194,7 +189,7 @@ class CottageBookerBlockController extends BlockController {
 
             $sCreditsText = ($aEvent['credits'] == 1) ? t('schelp') : t('schelpen');
 
-            $aResponse[$iKey]['title'] = t('Uitzondering: ').$aEvent['credits'].' '.$sCreditsText.t(' per dag.');
+            $aResponse[$iKey]['title'] = t('Uitzondering: ') . $aEvent['credits'] . ' ' . $sCreditsText . t(' per dag.');
             $aResponse[$iKey]['id'] = $aEvent['entryID'];
             $aResponse[$iKey]['type'] = 'exception';
             $aResponse[$iKey]['notes'] = $aEvent['notes'];
@@ -205,7 +200,8 @@ class CottageBookerBlockController extends BlockController {
         exit;
     }
 
-    public function action_credits() {
+    public function actionCredits()
+    {
         $oResponse = new stdClass;
 
         $sStart = $this->get('start');
@@ -227,19 +223,22 @@ class CottageBookerBlockController extends BlockController {
         exit;
     }
 
-    public function fetchAll() {
+    public function fetchAll()
+    {
         $oDb = Loader::db();
         $sSql = "SELECT * FROM btCottageBookerBookings WHERE bID = ?";
         return $oDb->GetAll($sSql, array($this->bID));
     }
 
-    public function fetchAllExceptions() {
+    public function fetchAllExceptions()
+    {
         $oDb = Loader::db();
         $sSql = "SELECT * FROM btCottageBookerExceptions WHERE bID = ?";
         return $oDb->GetAll($sSql, array($this->bID));
     }
 
-    protected function insertBooking($uId, $sStart, $sEnd, $sNotes, $iPersons) {
+    protected function insertBooking($uId, $sStart, $sEnd, $sNotes, $iPersons)
+    {
         date_default_timezone_set('UTC');
 
         // Mag de gebruiker reserveren?
@@ -263,21 +262,21 @@ class CottageBookerBlockController extends BlockController {
             $iBookingId = $oDb->Insert_ID();
 
             $this->mailAdmins('mail_insert_booking',
-            array(
-                'sStart'        =>      date('d-m-Y', strtotime($sStart)),
-                'sEnd'          =>      date('d-m-Y', strtotime($sEnd)),
-                'sNotes'        =>      $sNotes,
-                'iPersons'      =>      $iPersons,
-                'iBookingId'    =>      $iBookingId
-            ));
+                array(
+                    'sStart' => date('d-m-Y', strtotime($sStart)),
+                    'sEnd' => date('d-m-Y', strtotime($sEnd)),
+                    'sNotes' => $sNotes,
+                    'iPersons' => $iPersons,
+                    'iBookingId' => $iBookingId,
+                ));
 
             $this->mailUser($uId, 'mail_insert_booking_user',
-            array(
-                'sStart'        =>      date('d-m-Y', strtotime($sStart)),
-                'sEnd'          =>      date('d-m-Y', strtotime($sEnd)),
-                'iPersons'      =>      $iPersons,
-                'sNotes'        =>      $sNotes
-            ));
+                array(
+                    'sStart' => date('d-m-Y', strtotime($sStart)),
+                    'sEnd' => date('d-m-Y', strtotime($sEnd)),
+                    'iPersons' => $iPersons,
+                    'sNotes' => $sNotes,
+                ));
 
             return array("status" => "success", "message" => t("Uw reservering is geplaatst!"));
         } else {
@@ -285,7 +284,8 @@ class CottageBookerBlockController extends BlockController {
         }
     }
 
-    protected function updateBooking($entryID, $uId, $sStart, $sEnd, $sNotes, $iPersons) {
+    protected function updateBooking($entryID, $uId, $sStart, $sEnd, $sNotes, $iPersons)
+    {
         date_default_timezone_set('UTC');
 
         $mCanEdit = $this->canEdit($entryID, $uId, $sStart, $sEnd);
@@ -307,21 +307,21 @@ class CottageBookerBlockController extends BlockController {
             $this->updateUserCredits($uId, $iOldCredits - $this->getCredits($sStart, $sEnd));
 
             $this->mailAdmins('mail_update_booking',
-            array(
-                'sStart'        =>      date('d-m-Y', strtotime($sStart)),
-                'sEnd'          =>      date('d-m-Y', strtotime($sEnd)),
-                'sNotes'        =>      $sNotes,
-                'iPersons'      =>      $iPersons,
-                'iBookingId'    =>      $entryID
-            ));
+                array(
+                    'sStart' => date('d-m-Y', strtotime($sStart)),
+                    'sEnd' => date('d-m-Y', strtotime($sEnd)),
+                    'sNotes' => $sNotes,
+                    'iPersons' => $iPersons,
+                    'iBookingId' => $entryID,
+                ));
 
             $this->mailUser($uId, 'mail_update_booking_user',
-            array(
-                'sStart'        =>      date('d-m-Y', strtotime($sStart)),
-                'sEnd'          =>      date('d-m-Y', strtotime($sEnd)),
-                'iPersons'      =>      $iPersons,
-                'sNotes'        =>      $sNotes
-            ));
+                array(
+                    'sStart' => date('d-m-Y', strtotime($sStart)),
+                    'sEnd' => date('d-m-Y', strtotime($sEnd)),
+                    'iPersons' => $iPersons,
+                    'sNotes' => $sNotes,
+                ));
 
             return array("status" => "success", "message" => t("Uw reservering is bijgewerkt!"));
         } else {
@@ -329,7 +329,8 @@ class CottageBookerBlockController extends BlockController {
         }
     }
 
-    protected function deleteBooking($entryID, $uId) {
+    protected function deleteBooking($entryID, $uId)
+    {
         date_default_timezone_set('UTC');
 
         $mCanDelete = $this->canDelete($entryID, $uId);
@@ -358,21 +359,21 @@ class CottageBookerBlockController extends BlockController {
 
             $iBookingId = $oDb->Insert_ID();
             $this->mailAdmins('mail_delete_booking',
-            array(
-                'sStart'        =>      date('d-m-Y', strtotime($aBooking['start'])),
-                'sEnd'          =>      date('d-m-Y', strtotime($aBooking['end'])),
-                'sNotes'        =>      $aBooking['notes'],
-                'iPersons'      =>      $iPersons,
-                'iBookingId'    =>      $iBookingId
-            ));
+                array(
+                    'sStart' => date('d-m-Y', strtotime($aBooking['start'])),
+                    'sEnd' => date('d-m-Y', strtotime($aBooking['end'])),
+                    'sNotes' => $aBooking['notes'],
+                    'iPersons' => $iPersons,
+                    'iBookingId' => $iBookingId,
+                ));
 
             $this->mailUser($uId, 'mail_delete_booking_user',
-            array(
-                'sStart'        =>      date('d-m-Y', strtotime($aBooking['start'])),
-                'sEnd'          =>      date('d-m-Y', strtotime($aBooking['end'])),
-                'iPersons'      =>      $iPersons,
-                'sNotes'        =>      $aBooking['notes'],
-            ));
+                array(
+                    'sStart' => date('d-m-Y', strtotime($aBooking['start'])),
+                    'sEnd' => date('d-m-Y', strtotime($aBooking['end'])),
+                    'iPersons' => $iPersons,
+                    'sNotes' => $aBooking['notes'],
+                ));
 
             return array("status" => "success", "message" => t("Uw reservering is geannuleerd!"));
         } else {
@@ -380,7 +381,8 @@ class CottageBookerBlockController extends BlockController {
         }
     }
 
-    protected function mailAdmins($sTemplate, $aParams){
+    protected function mailAdmins($sTemplate, $aParams)
+    {
         // Alle admins ophalen
         Loader::model('user_list');
         $userList = new UserList();
@@ -395,32 +397,33 @@ class CottageBookerBlockController extends BlockController {
         $uId = $oUser->getUserID();
         $oUserInfo = UserInfo::getByID($uId);
         $aStandardParams = array(
-                'sFullName'     =>      $oUserInfo->getUserFullName(),
-                'sEmail'        =>      $oUserInfo->getUserEmail()
-            );
+            'sFullName' => $oUserInfo->getUserFullName(),
+            'sEmail' => $oUserInfo->getUserEmail(),
+        );
         $aParams = array_merge($aParams, $aStandardParams);
-        foreach($aParams as $sKey => $sParam){
+        foreach ($aParams as $sKey => $sParam) {
             $mh->addParameter($sKey, $sParam);
         }
         $mh->load($sTemplate, 'cottage_booker');
-        foreach($users as $user){
+        foreach ($users as $user) {
             $mh->to($user->getUserEmail(), $user->getUserFullName());
         }
         $mh->sendMail();
     }
 
-    protected function mailUser($uId, $sTemplate, $aParams){
+    protected function mailUser($uId, $sTemplate, $aParams)
+    {
         $mh = Loader::helper('mail');
         $mh->from('info@familie-kramer.nl');
 
         // Parameters
         $oUserInfo = UserInfo::getByID($uId);
         $aStandardParams = array(
-                'sFullName'     =>      $oUserInfo->getUserFullName(),
-                'sEmail'        =>      $oUserInfo->getUserEmail()
-            );
+            'sFullName' => $oUserInfo->getUserFullName(),
+            'sEmail' => $oUserInfo->getUserEmail(),
+        );
         $aParams = array_merge($aParams, $aStandardParams);
-        foreach($aParams as $sKey => $sParam){
+        foreach ($aParams as $sKey => $sParam) {
             $mh->addParameter($sKey, $sParam);
         }
         $mh->load($sTemplate, 'cottage_booker');
@@ -429,12 +432,13 @@ class CottageBookerBlockController extends BlockController {
         $mh->sendMail();
     }
 
-    protected function canBook($sStart, $sEnd, $uId) {
+    protected function canBook($sStart, $sEnd, $uId)
+    {
         if ($this->isAdmin()) {
             return true;
         } else {
             // Ingelogd?
-            if ($this->isLoggedIn() !== true){
+            if ($this->isLoggedIn() !== true) {
                 return $this->isLoggedIn();
             }
 
@@ -448,26 +452,26 @@ class CottageBookerBlockController extends BlockController {
                 return t('U heeft helaas niet voldoende schelpen voor deze reservering.');
             }
 
-            if(!$this->canBookCancelledBookings){
+            if (!$this->canBookCancelledBookings) {
                 // Deze periode al eens geannuleerd?
                 $mIsCancelled = $this->getCancelledBooking($uId, $sStart, $sEnd);
                 if ($mIsCancelled !== false) {
                     return t('U heeft de periode ') . date('d-m-Y', strtotime($mIsCancelled['start']))
-                            . t(' t/m ') . date('d-m-Y', strtotime($mIsCancelled['end']))
-                            . t(' al eens geannuleerd. U kunt niet opnieuw reserveren.');
+                    . t(' t/m ') . date('d-m-Y', strtotime($mIsCancelled['end']))
+                    . t(' al eens geannuleerd. U kunt niet opnieuw reserveren.');
                 }
             }
 
             // Gaan we niet dubbel boeken?
             $mIsAlreadyBooked = $this->isAlreadyBooked($sStart, $sEnd);
-            if($mIsAlreadyBooked !== false){
-                return t('Deze periode is al door iemand geboekt van '. date('d-m-Y', strtotime($mIsAlreadyBooked['start']))
-                            . t(' t/m ') . date('d-m-Y', strtotime($mIsAlreadyBooked['end'])).'.');
+            if ($mIsAlreadyBooked !== false) {
+                return t('Deze periode is al door iemand geboekt van ' . date('d-m-Y', strtotime($mIsAlreadyBooked['start']))
+                    . t(' t/m ') . date('d-m-Y', strtotime($mIsAlreadyBooked['end'])) . '.');
             }
 
             // Kan je alleen een hele week boeken?
             $mWeekOnly = $this->getAllowedByExceptions($sStart, $sEnd);
-            if($mWeekOnly !== false){
+            if ($mWeekOnly !== false) {
                 return $mWeekOnly;
             }
 
@@ -476,12 +480,13 @@ class CottageBookerBlockController extends BlockController {
         return t('U kunt deze periode helaas niet reserveren.');
     }
 
-    protected function canEdit($entryID, $uId, $sStart, $sEnd) {
+    protected function canEdit($entryID, $uId, $sStart, $sEnd)
+    {
         if ($this->isAdmin()) {
             return true;
         } else {
             // Ingelogd?
-            if ($this->isLoggedIn() !== true){
+            if ($this->isLoggedIn() !== true) {
                 return $this->isLoggedIn();
             }
 
@@ -504,25 +509,25 @@ class CottageBookerBlockController extends BlockController {
             }
 
             // Deze periode al eens geannuleerd?
-            if(!$this->canBookCancelledBookings){
+            if (!$this->canBookCancelledBookings) {
                 $mIsCancelled = $this->getCancelledBooking($uId, $sStart, $sEnd);
                 if ($mIsCancelled !== false) {
                     return t('U heeft de periode ') . date('d-m-Y', strtotime($mIsCancelled['start']))
-                            . t(' t/m ') . date('d-m-Y', strtotime($mIsCancelled['end']))
-                            . t(' al eens geannuleerd. U kunt niet opnieuw reserveren.');
+                    . t(' t/m ') . date('d-m-Y', strtotime($mIsCancelled['end']))
+                    . t(' al eens geannuleerd. U kunt niet opnieuw reserveren.');
                 }
             }
 
             // Gaan we niet dubbel boeken?
             $mIsAlreadyBooked = $this->isAlreadyBooked($sStart, $sEnd, $uId);
-            if($mIsAlreadyBooked !== false){
-                return t('Deze periode is al door iemand geboekt van'. date('d-m-Y', strtotime($mIsAlreadyBooked['start']))
-                            . t(' t/m ') . date('d-m-Y', strtotime($mIsAlreadyBooked['end'])).'.');
+            if ($mIsAlreadyBooked !== false) {
+                return t('Deze periode is al door iemand geboekt van' . date('d-m-Y', strtotime($mIsAlreadyBooked['start']))
+                    . t(' t/m ') . date('d-m-Y', strtotime($mIsAlreadyBooked['end'])) . '.');
             }
 
             // Kan je alleen een hele week boeken?
             $mWeekOnly = $this->getAllowedByExceptions($sStart, $sEnd);
-            if($mWeekOnly !== false){
+            if ($mWeekOnly !== false) {
                 return $mWeekOnly;
             }
 
@@ -531,12 +536,13 @@ class CottageBookerBlockController extends BlockController {
         return t('U kunt deze reservering helaas niet bewerken.');
     }
 
-    protected function canDelete($entryID, $uId) {
+    protected function canDelete($entryID, $uId)
+    {
         if ($this->isAdmin()) {
             return true;
         } else {
             // Ingelogd?
-            if ($this->isLoggedIn() !== true){
+            if ($this->isLoggedIn() !== true) {
                 return $this->isLoggedIn();
             }
 
@@ -564,12 +570,13 @@ class CottageBookerBlockController extends BlockController {
      * @param string $output_format
      * @return array
      */
-    protected function dateRangeToArray($first, $last, $step = '+1 day', $output_format = 'd-m-Y' ) {
+    protected function dateRangeToArray($first, $last, $step = '+1 day', $output_format = 'd-m-Y')
+    {
         $dates = array();
         $current = strtotime($first);
         $last = strtotime($last);
 
-        while( $current <= $last ) {
+        while ($current <= $last) {
 
             $dates[] = date($output_format, $current);
             $current = strtotime($step, $current);
@@ -583,14 +590,15 @@ class CottageBookerBlockController extends BlockController {
      * @param $sEnd
      * @return int
      */
-    protected function getCredits($sStart, $sEnd) {
+    protected function getCredits($sStart, $sEnd)
+    {
         $iCredits = 0;
 
         $aExceptions = $this->getAllExceptions($sStart, $sEnd);
         $aExceptionDays = array();
-        foreach($aExceptions as $aException){
+        foreach ($aExceptions as $aException) {
             $aTempExDays = $this->dateRangeToArray($aException['start'], $aException['end']);
-            foreach($aTempExDays as $sExDay){
+            foreach ($aTempExDays as $sExDay) {
                 $aExceptionDays[$sExDay] = $aException['credits'];
             }
         }
@@ -598,11 +606,11 @@ class CottageBookerBlockController extends BlockController {
         $aDays = $this->dateRangeToArray($sStart, $sEnd);
         $sFirst = date('d-m-Y', strtotime($sStart));
         $sLast = date('d-m-Y', strtotime($sEnd));
-        foreach($aDays as $sDay){
+        foreach ($aDays as $sDay) {
             $iWeekDay = date("w", strtotime($sDay));
 
-            if(isset($aExceptionDays[$sDay])){
-                if($iWeekDay == 6 && $sDay == $sLast && $sDay != $sFirst){
+            if (isset($aExceptionDays[$sDay])) {
+                if ($iWeekDay == 6 && $sDay == $sLast && $sDay != $sFirst) {
                     // Don't count the last Saturday
                     // It's the change day
                     continue;
@@ -626,39 +634,40 @@ class CottageBookerBlockController extends BlockController {
                 $fFactor = 0;
             }
 
-            if($iWeekDay == 0 || $iWeekDay == 6){
+            if ($iWeekDay == 0 || $iWeekDay == 6) {
                 // Weekend
-                if($iWeekDay == 6 && $sDay == $sLast && $sDay != $sFirst){
+                if ($iWeekDay == 6 && $sDay == $sLast && $sDay != $sFirst) {
                     // Don't count the last Saturday
                     // It's the change day
                     continue;
                 }
                 $iCredits += $this->creditsPerWeekendDay * $fFactor;
-            }else{
+            } else {
                 // Weekday
                 $iCredits += $this->creditsPerWeekDay * $fFactor;
             }
 
         }
 
-        if($iCredits < 0){
+        if ($iCredits < 0) {
             $iCredits = 0;
         }
 
-        return (int)round($iCredits);
+        return (int) round($iCredits);
     }
 
-    protected function getAllExceptions($sStart, $sEnd) {
+    protected function getAllExceptions($sStart, $sEnd)
+    {
         $dStart = date("Y-m-d", strtotime($sStart));
         $dEnd = date("Y-m-d", strtotime($sEnd));
 
         $oDb = Loader::db();
         $sSql = "SELECT * "
-                . "FROM btCottageBookerExceptions "
-                . "WHERE bID = ? "
-                . "AND (((start <= ?) AND (end >= ?))" // Start tussen start en end
-                . "OR  ((start <= ?) AND (end >= ?))" // Of end tussen start en end
-                . "OR  ((start >= ?) AND (end <= ?)))"; // Of periode tussen start en end
+        . "FROM btCottageBookerExceptions "
+        . "WHERE bID = ? "
+        . "AND (((start <= ?) AND (end >= ?))" // Start tussen start en end
+         . "OR  ((start <= ?) AND (end >= ?))" // Of end tussen start en end
+         . "OR  ((start >= ?) AND (end <= ?)))"; // Of periode tussen start en end
         return $oDb->GetAll($sSql, array($this->bID,
             $dStart,
             $dStart,
@@ -668,24 +677,24 @@ class CottageBookerBlockController extends BlockController {
             $dEnd));
     }
 
-    protected function getAllowedByExceptions($sStart, $sEnd) {
+    protected function getAllowedByExceptions($sStart, $sEnd)
+    {
         $aResults = $this->getAllExceptions($sStart, $sEnd);
 
-        foreach($aResults as $aResult){
-            if($aResult['bookOnlyWeeks']){
+        foreach ($aResults as $aResult) {
+            if ($aResult['bookOnlyWeeks']) {
                 // Meer dan 1 dag en start en eind op zaterdag?
-                if(floor((strtotime($sEnd)-strtotime($sStart))/3600/24) <= 1
+                if (floor((strtotime($sEnd) - strtotime($sStart)) / 3600 / 24) <= 1
                     || date('N', strtotime($sStart)) != 6
-                    || date('N', strtotime($sEnd)) != 6)
-                {
+                    || date('N', strtotime($sEnd)) != 6) {
                     return t('Voor deze periode kunt u alleen van zaterdag tot zaterdag boeken.');
                 }
             }
 
             $maxNumberOfDays = intval($aResult['maxNumberOfDays']);
-            $iDays = intval(floor(abs(strtotime($sEnd) - strtotime($sStart))/86400));
+            $iDays = intval(floor(abs(strtotime($sEnd) - strtotime($sStart)) / 86400));
 
-            if(($maxNumberOfDays > 0) && ($maxNumberOfDays < $iDays)){
+            if (($maxNumberOfDays > 0) && ($maxNumberOfDays < $iDays)) {
                 return t('U kunt in deze periode een verblijf van maximaal %s aaneengesloten dagen boeken.', $maxNumberOfDays);
             }
         }
@@ -693,7 +702,8 @@ class CottageBookerBlockController extends BlockController {
         return false;
     }
 
-    protected function isAdmin() {
+    protected function isAdmin()
+    {
         $u = new user();
 
         $gBeheer = Group::getByName('Schelpenbeheerders');
@@ -702,52 +712,56 @@ class CottageBookerBlockController extends BlockController {
 
         if ($u->inGroup($gBeheer) || $u->isSuperUser()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    protected function isLoggedIn(){
+    protected function isLoggedIn()
+    {
         $u = new user();
-        if($u->IsLoggedIn()){
-            if(!$this->isAdmin()){
+        if ($u->IsLoggedIn()) {
+            if (!$this->isAdmin()) {
                 $gUsers = Group::getById(intval($this->userGroup));
-                if($u->inGroup($gUsers)){
+                if ($u->inGroup($gUsers)) {
                     return true;
-                }else{
+                } else {
                     return t('U moet toegevoegd zijn aan de gebruikersgroep om te kunnen reserveren.');
                 }
-            }else{
+            } else {
                 return true;
             }
-        }else{
+        } else {
             return t('U moet ingelogd zijn om te kunnen reserveren.');
         }
     }
 
-    protected function getUserCottageBookerCredits($uId) {
+    protected function getUserCottageBookerCredits($uId)
+    {
         $oUserInfo = UserInfo::getByID($uId);
         $iCredits = $oUserInfo->getUserCottageBookerCredits();
         return $iCredits;
     }
 
-    protected function updateUserCredits($uId, $iAmount) {
+    protected function updateUserCredits($uId, $iAmount)
+    {
         $oUserInfo = UserInfo::getByID($uId);
         $oUserInfo->setAttribute('cottage_booker_credits', $oUserInfo->getUserCottageBookerCredits() + $iAmount);
     }
 
-    protected function getCancelledBooking($uId, $sStart, $sEnd) {
+    protected function getCancelledBooking($uId, $sStart, $sEnd)
+    {
         $dStart = date("Y-m-d", strtotime($sStart));
         $dEnd = date("Y-m-d", strtotime($sEnd));
 
         $oDb = Loader::db();
         $sSql = "SELECT start, end "
-                . "FROM btCottageBookerCancelled "
-                . "WHERE bID = ? "
-                . "AND uID = ?"
-                . "AND (((start <= ?) AND (end >= ?))" // Start tussen start en end
-                . "OR  ((start <= ?) AND (end >= ?))" // Of end tussen start en end
-                . "OR  ((start >= ?) AND (end <= ?)))"; // Of geannuleerde periode tussen start en end
+        . "FROM btCottageBookerCancelled "
+        . "WHERE bID = ? "
+        . "AND uID = ?"
+        . "AND (((start <= ?) AND (end >= ?))" // Start tussen start en end
+         . "OR  ((start <= ?) AND (end >= ?))" // Of end tussen start en end
+         . "OR  ((start >= ?) AND (end <= ?)))"; // Of geannuleerde periode tussen start en end
         $aResult = $oDb->GetRow($sSql, array($this->bID,
             $uId,
             $dStart,
@@ -763,17 +777,18 @@ class CottageBookerBlockController extends BlockController {
         }
     }
 
-    protected function isAlreadyBooked($sStart, $sEnd, $uId = 0) {
+    protected function isAlreadyBooked($sStart, $sEnd, $uId = 0)
+    {
         $dStart = date("Y-m-d", strtotime($sStart));
         $dEnd = date("Y-m-d", strtotime($sEnd));
 
         $oDb = Loader::db();
         $sSql = "SELECT start, end "
-                . "FROM btCottageBookerBookings "
-                . "WHERE bID = ? "
-                . "AND (((start <= ?) AND (end >= ?))" // Start tussen start en end
-                . "OR  ((start <= ?) AND (end >= ?))" // Of end tussen start en end
-                . "OR  ((start >= ?) AND (end <= ?)))"; // Of geannuleerde periode tussen start en end
+        . "FROM btCottageBookerBookings "
+        . "WHERE bID = ? "
+        . "AND (((start <= ?) AND (end >= ?))" // Start tussen start en end
+         . "OR  ((start <= ?) AND (end >= ?))" // Of end tussen start en end
+         . "OR  ((start >= ?) AND (end <= ?)))"; // Of geannuleerde periode tussen start en end
         $aParams = array($this->bID,
             $dStart,
             $dStart,
@@ -782,7 +797,7 @@ class CottageBookerBlockController extends BlockController {
             $dStart,
             $dEnd);
         // Allow edits by the same user
-        if($uId > 0){
+        if ($uId > 0) {
             $sSql .= "AND (uID <> ?)";
             $aParams[] = $uId;
         }
@@ -798,28 +813,28 @@ class CottageBookerBlockController extends BlockController {
             $aCounts[strtotime($sStart)] = 0;
             $aCounts[strtotime($sEnd)] = 0;
 
-            foreach($aResults as $aResult){
+            foreach ($aResults as $aResult) {
 
                 $iCurrentStart = date('N', strtotime($aResult['start']));
                 $iCurrentEnd = date('N', strtotime($aResult['end']));
 
-                if(strtotime($sStart) == strtotime($aResult['end'])
-                    && $iNewStart == $this->changeDay && $iCurrentEnd == $this->changeDay){
+                if (strtotime($sStart) == strtotime($aResult['end'])
+                    && $iNewStart == $this->changeDay && $iCurrentEnd == $this->changeDay) {
                     $aCounts[strtotime($sStart)]++;
                     continue;
-                }elseif(strtotime($sEnd) == strtotime($aResult['start'])
-                    && $iNewEnd == $this->changeDay && $iCurrentStart == $this->changeDay){
+                } elseif (strtotime($sEnd) == strtotime($aResult['start'])
+                    && $iNewEnd == $this->changeDay && $iCurrentStart == $this->changeDay) {
                     $aCounts[strtotime($sEnd)]++;
                     continue;
-                }else{
+                } else {
 
                     return $aResult;
                 }
             }
 
-            if($aCounts[strtotime($sStart)] >= 2 || $aCounts[strtotime($sEnd)] >= 2){
+            if ($aCounts[strtotime($sStart)] >= 2 || $aCounts[strtotime($sEnd)] >= 2) {
                 return $aResults[0];
-            }else{
+            } else {
                 return false;
             }
         } else {
@@ -827,4 +842,36 @@ class CottageBookerBlockController extends BlockController {
         }
     }
 
+    /**
+     * Set admin page link if user has access
+     */
+    private function _setAdminPageLink(){
+        $adminPage = Page::getByPath('/dashboard/cottage_booker',
+                                     $version = 'active');
+        $p = new Permissions($adminPage);
+
+        if ($p->canRead()) {
+            $this->set('adminPageLink', '/dashboard/cottage_booker');
+        } else {
+            $this->set('adminPageLink', false);
+        }
+    }
+
+    /**
+     * Setup user properties
+     */
+    private function _initUser(){
+        $oUser = new user();
+        $uId = $oUser->getUserID();
+        $oUserInfo = UserInfo::getByID($uId);
+        if ($this->isLoggedIn() === true) {
+            $this->set('loggedIn', true);
+            $this->set('userFullName', $oUserInfo->getUserFullName());
+            $this->set('userCredits', $oUserInfo->getUserCottageBookerCredits());
+            $this->set('schelpenPerDag', $this->creditsPerWeekDay);
+            $this->set('schelpenPerWeekendDag', $this->creditsPerWeekendDay);
+        } else {
+            $this->set('loggedIn', false);
+        }
+    }
 }
