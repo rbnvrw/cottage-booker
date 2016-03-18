@@ -31,7 +31,6 @@ class CottageBookerBlockController extends BlockController
         $this->_setAdminPageLink();
     }
 
-
     public function formatRequiredFieldsMessage($aRequiredFields)
     {
         $sMessage = '<p>' . t('De volgende velden zijn niet ingevuld:') . '</p>';
@@ -845,9 +844,10 @@ class CottageBookerBlockController extends BlockController
     /**
      * Set admin page link if user has access
      */
-    private function _setAdminPageLink(){
+    private function _setAdminPageLink()
+    {
         $adminPage = Page::getByPath('/dashboard/cottage_booker',
-                                     $version = 'active');
+            $version = 'active');
         $p = new Permissions($adminPage);
 
         if ($p->canRead()) {
@@ -860,10 +860,12 @@ class CottageBookerBlockController extends BlockController
     /**
      * Setup user properties
      */
-    private function _initUser(){
+    private function _initUser()
+    {
         $oUser = new user();
         $uId = $oUser->getUserID();
         $oUserInfo = UserInfo::getByID($uId);
+        $this->set('isRegistered', $oUser->isRegistered());
         if ($this->isLoggedIn() === true) {
             $this->set('loggedIn', true);
             $this->set('userFullName', $oUserInfo->getUserFullName());
@@ -872,6 +874,12 @@ class CottageBookerBlockController extends BlockController
             $this->set('schelpenPerWeekendDag', $this->creditsPerWeekendDay);
         } else {
             $this->set('loggedIn', false);
+        }
+        if (Config::get("ENABLE_USER_PROFILES")) {
+            $this->set('userName', '<a href="' . $this->url('/profile') . '">'
+                . $oUser->getUserName() . '</a>');
+        } else {
+            $this->set('userName', $u->getUserName());
         }
     }
 }

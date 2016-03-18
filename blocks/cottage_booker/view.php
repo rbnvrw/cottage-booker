@@ -1,22 +1,18 @@
-<?php defined('C5_EXECUTE') or die(_("Access Denied.")) ?>
+<?php defined('C5_EXECUTE') or die(_("Access Denied."));?>
 <div class="ccm-ui cottage_booker">
 
-    <?php if($loggedIn): ?>
+    <?php if ($loggedIn): ?>
 
     <div class="page-header">
-        <h1><?php echo t('Welkom') .' '. $userFullName; ?>! <small><?php echo t('Je hebt'); ?> <span class="badge badge-info cottage_booker-i-user-credits"><?php echo $userCredits; ?></span> <span class="cottage_booker-i-user-credits--suffix"><?php echo ($userCredits == 1) ? 'schelp' : ' schelpen'; ?>.
+        <h1><?php echo t('Welkom') . ' ' . $userFullName; ?>! <small><?php echo t('Je hebt'); ?> <span class="badge badge-info cottage_booker-i-user-credits"><?php echo $userCredits; ?></span> <span class="cottage_booker-i-user-credits--suffix"><?php echo ($userCredits == 1) ? 'schelp' : ' schelpen'; ?>.
         <?php
-            $u = new User();
-            if ($u->isRegistered()) { ?>
-                <?php
-                if (Config::get("ENABLE_USER_PROFILES")) {
-                    $userName = '<a href="' . $this->url('/profile') . '">' . $u->getUserName() . '</a>';
-                } else {
-                    $userName = $u->getUserName();
-                }
-                ?>
-                (<?php if(!empty($adminPageLink)){ ?><a href="<?php echo $this->url($adminPageLink)?>"><?php echo t('instellingen')?></a> /<?php } ?> <a href="<?php echo $this->url('/login', 'logout')?>"><?php echo t('uitloggen')?></a>)
-        <?php } ?>
+        if ($isRegistered) {
+            echo $userName . '(' . ((!empty($adminPageLink)) ?
+                '<a href="' . $this->url($adminPageLink)'.">' . t('instellingen') . '</a> / ' : '' )
+                . '<a href="' . $this->url('/login', 'logout') . '">' . t('uitloggen') . '</a>);
+           }
+        ?>
+
         </span></small></h1>
     </div>
 
@@ -26,37 +22,37 @@
 
     <div class="cottage_booker__view cottage_booker__view--book-form hide">
         <?php
-        $oForm = Loader::helper('form');
-        ?>
+$oForm = Loader::helper('form');
+?>
         <form>
             <fieldset>
-                <legend class='cottage_booker__view--book-form__legend'><?php echo t('Reserveren'); ?></legend>
-                <?php echo $oForm->hidden('cottage_booker__book-form__id'); ?>
+                <legend class='cottage_booker__view--book - form__legend'><?php echo t('Reserveren'); ?></legend>
+                <?php echo $oForm->hidden('cottage_booker__book - form__id'); ?>
                 <div class="control-group">
-                    <?php echo $oForm->label('cottage_booker__book-form__start', t('Begindatum')); ?>
-                    <?php echo Loader::helper('form/date_time')->date('cottage_booker__book-form__start'); ?>
+                    <?php echo $oForm->label('cottage_booker__book - form__start', t('Begindatum')); ?>
+                    <?php echo Loader::helper('form / date_time')->date('cottage_booker__book - form__start'); ?>
                 </div>
                 <div class="control-group">
-                    <?php echo $oForm->label('cottage_booker__book-form__end', t('Einddatum')); ?>
-                    <?php echo Loader::helper('form/date_time')->date('cottage_booker__book-form__end'); ?>
+                    <?php echo $oForm->label('cottage_booker__book - form__end', t('Einddatum')); ?>
+                    <?php echo Loader::helper('form / date_time')->date('cottage_booker__book - form__end'); ?>
                 </div>
                 <div class="control-group">
-                    <?php echo $oForm->label('cottage_booker__book-form__credits', t('Kosten')); ?>
-                    <?php echo $oForm->text('cottage_booker__book-form__credits', '', array('class' => 'uneditable-input', 'readonly' => 'readonly')); ?>
+                    <?php echo $oForm->label('cottage_booker__book - form__credits', t('Kosten')); ?>
+                    <?php echo $oForm->text('cottage_booker__book - form__credits', '', array('class ' => 'uneditable - input', 'readonly' => 'readonly')); ?>
                     <span class="add-on"><?php echo t('schelpen'); ?></span>
                     <span class="help-block">
-                        Het aantal schelpen wordt automatisch berekend. Een weekdag kost <span class="badge badge-info"><?php echo $schelpenPerDag; ?></span> <?php echo ($schelpenPerDag == 1) ? 'schelp' : ' schelpen'; ?>,
-                        een weekenddag kost <span class="badge badge-info"><?php echo $schelpenPerWeekendDag; ?></span> <?php echo ($schelpenPerWeekendDag == 1) ? 'schelp' : ' schelpen'; ?>.
+                        Het aantal schelpen wordt automatisch berekend. Een weekdag kost <span class="badge badge-info"><?php echo $schelpenPerDag; ?></span> <?php echo ($schelpenPerDag == 1) ? 'schelp' : 'schelpen'; ?>,
+                        een weekenddag kost <span class="badge badge-info"><?php echo $schelpenPerWeekendDag; ?></span> <?php echo ($schelpenPerWeekendDag == 1) ? 'schelp' : 'schelpen'; ?>.
                     </span>
                 </div>
                 <div class="control-group">
-                    <?php echo $oForm->label('cottage_booker__book-form__persons', t('Aantal personen')); ?>
-                    <?php echo $oForm->text('cottage_booker__book-form__persons'); ?>
+                    <?php echo $oForm->label('cottage_booker__book - form__persons', t('Aantalpersonen')); ?>
+                    <?php echo $oForm->text('cottage_booker__book - form__persons'); ?>
                     <span class="add-on"><?php echo t('personen'); ?></span>
                 </div>
                 <div class="control-group">
-                    <?php echo $oForm->label('cottage_booker__book-form__notes', t('Opmerkingen')); ?>
-                    <?php echo $oForm->textarea('cottage_booker__book-form__notes'); ?>
+                    <?php echo $oForm->label('cottage_booker__book - form__notes', t('Opmerkingen')); ?>
+                    <?php echo $oForm->textarea('cottage_booker__book - form__notes'); ?>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn cottage_booker__book-form__button--view-calendar"><i class="icon-calendar"></i> <?php echo t('Terug'); ?></button>
@@ -67,8 +63,8 @@
         </form>
 
         <div class="cottage_booker__book-form__confirm__delete hide">
-            <p><?php echo t('Weet je zeker dat je deze reservering wilt verwijderen?'); ?></p>
-            <p><?php echo t('Je kunt niet opnieuw in dezelfde periode reserveren.'); ?></p>
+            <p><?php echo t('Weetjezekerdatjedezereserveringwiltverwijderen ? '); ?></p>
+            <p><?php echo t('Jekuntnietopnieuwindezelfdeperiodereserveren . '); ?></p>
         </div>
 
         <div class="cottage_booker__exception hide">
@@ -76,7 +72,7 @@
 
     </div>
 
-    <a href="<?php echo $this->action('new'); ?>" class="cottage_booker__action--new hide"><i class="icon-plus"></i> <?php echo t('reserveren'); ?></a>
+    <a href="<?php echo $this->action('new '); ?>" class="cottage_booker__action--new hide"><i class="icon-plus"></i> <?php echo t('reserveren'); ?></a>
     <a href="<?php echo $this->action('fetchall'); ?>" class="cottage_booker__action--fetchall hide"></a>
     <a href="<?php echo $this->action('fetchallexceptions'); ?>" class="cottage_booker__action--fetchallexceptions hide"></a>
     <a href="<?php echo $this->action('update'); ?>" class="cottage_booker__action--update hide"></a>
@@ -86,9 +82,9 @@
     <?php else: ?>
 
     <div class="page-header">
-        <h1><?php echo t('Welkom gast'); ?>! <small><?php echo t('Om te reserveren moet je eerst <a href="/login">inloggen</a> of <a href="/register">registreren</a>.'); ?></small></h1>
+        <h1><?php echo t('Welkomgast'); ?>! <small><?php echo t('Omtereserverenmoetjeeerst < ahref = "/login" > inloggen <  / a > of < ahref = "/register" > registreren <  / a >  . '); ?></small></h1>
     </div>
 
-    <?php endif; ?>
+    <?php endif;?>
 
 </div>
