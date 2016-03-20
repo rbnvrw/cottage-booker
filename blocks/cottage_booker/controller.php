@@ -29,6 +29,7 @@ class CottageBookerBlockController extends BlockController
     {
         $this->_initUser();
         $this->_setAdminPageLink();
+        $this->_buildFormVars();
     }
 
     public function formatRequiredFieldsMessage($aRequiredFields)
@@ -881,5 +882,27 @@ class CottageBookerBlockController extends BlockController
         } else {
             $this->set('userName', $u->getUserName());
         }
+    }
+
+    protected function _buildFormVars()
+    {
+        $oForm = Loader::helper('form');
+        $this->set('formHiddenId', $oForm->hidden('cottage_booker__book-form__id'));
+        $this->set('formLabelStart', $oForm->label('cottage_booker__book-form__start', t('Begindatum')));
+        $this->set('formDateStart', Loader::helper('form/date_time')->date('cottage_booker__book-form__start'));
+        $this->set('formLabelEnd', $oForm->label('cottage_booker__book-form__end', t('Einddatum')));
+        $this->set('formDateEnd', Loader::helper('form/date_time')->date('cottage_booker__book-form__end'));
+        $this->set('formLabelCredits', $oForm->label('cottage_booker__book-form__credits', t('Kosten')));
+        $this->set('formInputCredits', $oForm->text('cottage_booker__book-form__credits', '', array('class' => 'uneditable-input', 'readonly' => 'readonly')));
+        $this->set('formLabelPersons', $oForm->label('cottage_booker__book-form__persons', t('Aantal personen')));
+        $this->set('formInputPersons', $oForm->text('cottage_booker__book-form__persons'));
+        $this->set('formLabelNotes', $oForm->label('cottage_booker__book-form__notes', t('Opmerkingen')));
+        $this->set('formInputNotes', $oForm->textarea('cottage_booker__book-form__notes'));
+        $this->set('actionNew', $this->action('new'));
+        $this->set('actionFetchall', $this->action('fetchall'));
+        $this->set('actionFetchallexceptions', $this->action('fetchallexceptions'));
+        $this->set('actionUpdate', $this->action('update'));
+        $this->set('actionDelete', $this->action('delete'));
+        $this->set('actionCredits', $this->action('credits'));
     }
 }
