@@ -32,17 +32,21 @@ class CottageBookerBlockController extends BlockController
         $this->_buildFormVars();
     }
 
+    /**
+     * formatRequiredFieldsMessage
+     *
+     * @param mixed $aRequiredFields
+     */
     public function formatRequiredFieldsMessage($aRequiredFields)
     {
-        $sMessage = '<p>' . t('De volgende velden zijn niet ingevuld:') . '</p>';
-        $sMessage .= '<ul>';
+        $aMissing = [];
         foreach ($aRequiredFields as $sName => $sValue) {
-            if (empty($sValue)) {
-                $sMessage .= '<li>' . $sName . '</li>';
+            if(empty($sValue)){
+                $aMissing[] = $sName;
             }
         }
-        $sMessage .= '</ul>';
-        return $sMessage;
+
+        return TwigTemplate::renderTemplate('required_fields', ['missing' => $aMissing]);
     }
 
     public function actionNew()

@@ -1,0 +1,6 @@
+<p>{{ t('De volgende velden zijn niet ingevuld:') }}</p>
+<ul>
+    {% for name in missing %}
+        <li>{{ name }}</li>
+    {% endfor %}
+</ul>

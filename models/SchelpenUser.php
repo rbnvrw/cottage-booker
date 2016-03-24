@@ -16,7 +16,7 @@ class SchelpenUser
 
         // Fetch general settings
         $sSql = "SELECT * FROM btCottageBooker WHERE userCreditsMax > 0"
-                . "AND userCreditsAnnual > 0 LIMIT 1";
+            . "AND userCreditsAnnual > 0 LIMIT 1";
         $aConfig = $oDb->getRow($sSql);
 
         $iUserCredits = $aConfig['userCreditsAnnual'];
