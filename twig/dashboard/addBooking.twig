@@ -1,0 +1,35 @@
+<form action="{{ addBookingForm.action }}" method="POST">
+    <fieldset>
+        <legend style="margin-bottom: 0;">
+            {{ t('Reservering') }}
+        </legend>
+        <div class="control-group">
+            {{ addBookingForm.uIDLabel }}
+            {{ addBookingForm.uIDSelect }}
+        </div>
+        <div class="control-group">
+            {{ addBookingForm.startLabel }}
+            {{ addBookingForm.startText }}
+        </div>
+        <div class="control-group">
+            {{ addBookingForm.endLabel }}
+            {{ addBookingForm.endText }}
+        </div>
+        <div class="control-group">
+            {{ addBookingForm.creditsLabel }}
+            {{ addBookingForm.creditsText }}
+        </div>
+        <div class="control-group">
+            {{ addBookingForm.personsLabel }}
+            {{ addBookingForm.personsText }}
+        </div>
+        <div class="control-group">
+            {{ addBookingForm.notesLabel }}
+            {{ addBookingForm.notesTextarea }}
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> {{ t('Opslaan') }}</button>
+        </div>
+    </fieldset>
+</form>
+<a class="btn" href="{{ addBookingForm.reserveringAction }}"><i class="icon-chevron-left"></i> Terug</a>

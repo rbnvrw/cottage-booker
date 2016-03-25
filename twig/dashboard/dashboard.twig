@@ -1,0 +1,33 @@
+{{ header }}
+
+{% if message %}
+    <div class="ccm-ui" id="ccm-dashboard-result-message">
+        <div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button>{{ message }}</div>
+    </div>
+{% elseif error %}
+    <div class="ccm-ui" id="ccm-dashboard-result-message">
+        <div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">×</button>{{ error }}</div>
+    </div>
+{% endif %}
+
+{% if (task == 'settings' || task == 'save') %}
+    {% include 'dashboard/settings.twig' %}
+{% elseif task == 'reserveringen' %}
+    {% include 'dashboard/reservingen.twig' %}
+{% elseif task == 'addBooking' %}
+    {% include 'dashboard/addBooking.twig' %}
+{% elseif (task == 'editBooking' || task == 'updateBooking') %}
+    {% include 'dashboard/editBooking.twig' %}
+{% elseif task == 'cancelBooking' %}
+    {% include 'dashboard/cancelBooking.twig' %}
+{% elseif task == 'removeCancellation' %}
+    {% include 'dashboard/removeCancellation.twig' %}
+{% elseif (task == 'addException' || task == 'saveException' || task == 'editException') %}
+    {% include 'dashboard/editException.twig' %}
+{% elseif task == 'deleteException' %}
+    {% include 'dashboard/deleteException.twig' %}
+{% else %}
+    {% include 'dashboard/overview.twig' %}
+{% endif %}
+
+{{ footer }}

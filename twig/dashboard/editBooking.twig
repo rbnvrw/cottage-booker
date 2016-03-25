@@ -1,0 +1,37 @@
+ $oForm = Loader::helper('form'); ?>
+<form action="<?php echo $this->action('updateBooking', $aBooking['entryID']); ?>" method="POST">
+    <fieldset>
+        <legend style="margin-bottom: 0;">
+            <?php echo t('Reservering'); ?>
+        </legend>
+        <div class="control-group">
+            <?php echo $oForm->label('uID', t('Gebruiker')); ?>
+            <?php echo $oForm->select('uID', $aUsers, $aBooking['uID']); ?>
+        </div>
+        <div class="control-group">
+            <?php echo $oForm->label('start', t('Begindatum')); ?>
+            <?php echo $oForm->text('start', $aBooking['start']); ?>
+        </div>
+        <div class="control-group">
+            <?php echo $oForm->label('end', t('Einddatum')); ?>
+            <?php echo $oForm->text('end', $aBooking['end']); ?>
+        </div>
+        <div class="control-group">
+            <?php echo $oForm->label('credits', t('Kosten')); ?>
+            <?php echo $oForm->text('credits', $aBooking['credits']); ?>
+        </div>
+        <div class="control-group">
+            <?php echo $oForm->label('persons', t('Aantal personen')); ?>
+            <?php echo $oForm->text('persons', $aBooking['persons']); ?>
+        </div>
+        <div class="control-group">
+            <?php echo $oForm->label('notes', t('Opmerkingen')); ?>
+            <?php echo $oForm->textarea('notes', $aBooking['notes']); ?>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> <?php echo t('Opslaan'); ?></button>
+        </div>
+    </fieldset>
+</form>
+<a class="btn" href="<?php echo $this->action('reserveringen', $aBooking['bID']); ?>"><i class="icon-chevron-left"></i> Terug</a>
+<?php

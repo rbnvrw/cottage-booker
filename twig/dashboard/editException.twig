@@ -1,0 +1,41 @@
+ $oForm = Loader::helper('form'); ?>
+<form action="<?php echo $this->action('saveException', $aBooking['entryID']); ?>" method="POST">
+    <?php echo $oForm->hidden('bID', $aBooking['bID']); ?>
+    <fieldset>
+        <legend style="margin-bottom: 0;">
+            <?php echo t('Uitzondering'); ?>
+        </legend>
+        <div class="control-group">
+            <?php echo $oForm->label('start', t('Begindatum')); ?>
+            <?php echo $oForm->text('start', $aBooking['start'], array('class' => 'form__exception__start')); ?>
+        </div>
+        <div class="control-group">
+            <?php echo $oForm->label('end', t('Einddatum')); ?>
+            <?php echo $oForm->text('end', $aBooking['end'], array('class' => 'form__exception__end')); ?>
+            <span class="help-inline help-inline--days"></span>
+        </div>
+        <div class="control-group">
+            <?php echo $oForm->label('credits', t('Kosten per dag')); ?>
+            <?php echo $oForm->text('credits', $aBooking['credits'], array('class' => 'form__exception__credits')); ?>
+            <span class="help-inline help-inline--credits"></span>
+        </div>
+        <div class="control-group">
+            <?php echo $oForm->label('bookOnlyWeeks', t('Alleen gehele week boeken')); ?>
+            <?php echo $oForm->checkbox('bookOnlyWeeks', 1, $aBooking['bookOnlyWeeks']); ?>
+        </div>
+        <div class="control-group">
+            <?php echo $oForm->label('maxNumberOfDays', t('Maximaal aantal dagen')); ?>
+            <?php echo $oForm->text('maxNumberOfDays', $aBooking['maxNumberOfDays']); ?>
+            <span class="help-inline"><?php echo t('Het maximum aantal dagen dat je aaneengesloten mag boeken in deze periode. Vul 0 in voor onbeperkt.'); ?></span>
+        </div>
+        <div class="control-group">
+            <?php echo $oForm->label('notes', t('Opmerkingen')); ?>
+            <?php echo $oForm->textarea('notes', $aBooking['notes']); ?>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> <?php echo t('Opslaan'); ?></button>
+        </div>
+    </fieldset>
+</form>
+<a class="btn" href="<?php echo $this->action('reserveringen', $aBooking['bID']); ?>"><i class="icon-chevron-left"></i> Terug</a>
+<?php
