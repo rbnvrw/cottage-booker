@@ -1,37 +1,35 @@
- $oForm = Loader::helper('form'); ?>
-<form action="<?php echo $this->action('updateBooking', $aBooking['entryID']); ?>" method="POST">
+<form action="{{ updateBookingAction }}" method="POST">
     <fieldset>
         <legend style="margin-bottom: 0;">
-            <?php echo t('Reservering'); ?>
+            {{ t('Reservering') }}
         </legend>
         <div class="control-group">
-            <?php echo $oForm->label('uID', t('Gebruiker')); ?>
-            <?php echo $oForm->select('uID', $aUsers, $aBooking['uID']); ?>
+            {{ addBookingForm.uIDLabel }}
+            {{ addBookingForm.uIDSelect }}
         </div>
         <div class="control-group">
-            <?php echo $oForm->label('start', t('Begindatum')); ?>
-            <?php echo $oForm->text('start', $aBooking['start']); ?>
+            {{ addBookingForm.startLabel }}
+            {{ addBookingForm.startText }}
         </div>
         <div class="control-group">
-            <?php echo $oForm->label('end', t('Einddatum')); ?>
-            <?php echo $oForm->text('end', $aBooking['end']); ?>
+            {{ addBookingForm.endLabel }}
+            {{ addBookingForm.endText }}
         </div>
         <div class="control-group">
-            <?php echo $oForm->label('credits', t('Kosten')); ?>
-            <?php echo $oForm->text('credits', $aBooking['credits']); ?>
+            {{ addBookingForm.creditsLabel }}
+            {{ addBookingForm.creditsText }}
         </div>
         <div class="control-group">
-            <?php echo $oForm->label('persons', t('Aantal personen')); ?>
-            <?php echo $oForm->text('persons', $aBooking['persons']); ?>
+            {{ addBookingForm.personsLabel }}
+            {{ addBookingForm.personsText }}
         </div>
         <div class="control-group">
-            <?php echo $oForm->label('notes', t('Opmerkingen')); ?>
-            <?php echo $oForm->textarea('notes', $aBooking['notes']); ?>
+            {{ addBookingForm.notesLabel }}
+            {{ addBookingForm.notesTextarea }}
         </div>
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> <?php echo t('Opslaan'); ?></button>
+            <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> {{ t('Opslaan') }}</button>
         </div>
     </fieldset>
 </form>
-<a class="btn" href="<?php echo $this->action('reserveringen', $aBooking['bID']); ?>"><i class="icon-chevron-left"></i> Terug</a>
-<?php
+<a class="btn" href="{{ reserveringen }}"><i class="icon-chevron-left"></i> Terug</a>

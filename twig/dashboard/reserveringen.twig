@@ -2,17 +2,17 @@
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active">
             <a href="#reserveringen" aria-controls="reserveringen" role="tab" data-toggle="tab">
-                <?php echo t('Reserveringen'); ?>
+                {{ t('Reserveringen') }}
             </a>
         </li>
         <li role="presentation">
             <a href="#annuleringen" aria-controls="annuleringen" role="tab" data-toggle="tab">
-                <?php echo t('Annuleringen'); ?>
+                {{ t('Annuleringen') }}
             </a>
         </li>
         <li role="presentation">
             <a href="#uitzonderingen" aria-controls="uitzonderingen" role="tab" data-toggle="tab">
-                <?php echo t('Uitzonderingen'); ?>
+                {{ t('Uitzonderingen') }}
             </a>
         </li>
     </ul>
@@ -26,22 +26,22 @@
                 <thead>
                     <tr>
                         <th>
-                            <?php echo t('Door'); ?>
+                            {{ t('Door') }}
                         </th>
                         <th>
-                            <?php echo t('Begin'); ?>
+                            {{ t('Begin') }}
                         </th>
                         <th>
-                            <?php echo t('Eind'); ?>
+                            {{ t('Eind') }}
                         </th>
                         <th>
-                            <?php echo t('Kosten'); ?>
+                            {{ t('Kosten') }}
                         </th>
                         <th>
-                            <?php echo t('Opmerkingen'); ?>
+                            {{ t('Opmerkingen') }}
                         </th>
                         <th>
-                            <?php echo t('Personen'); ?>
+                            {{ t('Personen') }}
                         </th>
                         <th>&nbsp;</th>
                     </tr>
@@ -52,22 +52,22 @@ foreach ($aBookings as $aBooking) {
             ?>
                         <tr>
                             <td>
-                                <?php echo $aBooking['user']; ?>
+                                {{ $aBooking['user'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['start']; ?>
+                                {{ $aBooking['start'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['end']; ?>
+                                {{ $aBooking['end'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['credits']; ?>
+                                {{ $aBooking['credits'] }}
                             </td>
                             <td style="width: 50%">
-                                <?php echo $aBooking['notes']; ?>
+                                {{ $aBooking['notes'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['persons']; ?>
+                                {{ $aBooking['persons'] }}
                             </td>
                             <td>
                                 <a href="<?php echo $this->action('editBooking', $aBooking['entryID']); ?>"><i class="icon-pencil"></i></a>
@@ -85,22 +85,22 @@ foreach ($aBookings as $aBooking) {
                 <thead>
                     <tr>
                         <th>
-                            <?php echo t('Door'); ?>
+                            {{ t('Door') }}
                         </th>
                         <th>
-                            <?php echo t('Begin'); ?>
+                            {{ t('Begin') }}
                         </th>
                         <th>
-                            <?php echo t('Eind'); ?>
+                            {{ t('Eind') }}
                         </th>
                         <th>
-                            <?php echo t('Kosten'); ?>
+                            {{ t('Kosten') }}
                         </th>
                         <th>
-                            <?php echo t('Opmerkingen'); ?>
+                            {{ t('Opmerkingen') }}
                         </th>
                         <th>
-                            <?php echo t('Personen'); ?>
+                            {{ t('Personen') }}
                         </th>
                         <th>&nbsp;</th>
                     </tr>
@@ -111,22 +111,22 @@ foreach ($aCancelled as $aBooking) {
         ?>
                         <tr>
                             <td>
-                                <?php echo $aBooking['user']; ?>
+                                {{ $aBooking['user'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['start']; ?>
+                                {{ $aBooking['start'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['end']; ?>
+                                {{ $aBooking['end'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['credits']; ?>
+                                {{ $aBooking['credits'] }}
                             </td>
                             <td style="width: 50%">
-                                <?php echo $aBooking['notes']; ?>
+                                {{ $aBooking['notes'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['persons']; ?>
+                                {{ $aBooking['persons'] }}
                             </td>
                             <td>
                                 <a class="cottage_booker__dashboard__button--delete-cancellation" href="<?php echo $this->action('removeCancellation', $aBooking['entryID']); ?>"><i class="icon-trash"></i></a>
@@ -146,25 +146,25 @@ foreach ($aCancelled as $aBooking) {
                 <thead>
                     <tr>
                         <th>
-                            <?php echo t('Door'); ?>
+                            {{ t('Door') }}
                         </th>
                         <th>
-                            <?php echo t('Begin'); ?>
+                            {{ t('Begin') }}
                         </th>
                         <th>
-                            <?php echo t('Eind'); ?>
+                            {{ t('Eind') }}
                         </th>
                         <th>
-                            <?php echo t('Kosten per dag'); ?>
+                            {{ t('Kosten per dag') }}
                         </th>
                         <th>
-                            <?php echo t('Alleen week boeken'); ?>
+                            {{ t('Alleen week boeken') }}
                         </th>
                         <th>
-                            <?php echo t('Maximum aantal dagen'); ?>
+                            {{ t('Maximum aantal dagen') }}
                         </th>
                         <th>
-                            <?php echo t('Opmerkingen'); ?>
+                            {{ t('Opmerkingen') }}
                         </th>
                         <th></th>
                     </tr>
@@ -175,25 +175,25 @@ foreach ($aExceptions as $aBooking) {
         ?>
                         <tr>
                             <td>
-                                <?php echo $aBooking['user']; ?>
+                                {{ $aBooking['user'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['start']; ?>
+                                {{ $aBooking['start'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['end']; ?>
+                                {{ $aBooking['end'] }}
                             </td>
                             <td>
-                                <?php echo $aBooking['credits']; ?>
+                                {{ $aBooking['credits'] }}
                             </td>
                             <td>
-                                <?php echo (($aBooking['bookOnlyWeeks'] == 1) ? 'Ja' : 'Nee'); ?>
+                                {{ (($aBooking['bookOnlyWeeks'] == 1) ? 'Ja' : 'Nee') }}
                             </td>
                             <td>
-                                <?php echo $aBooking['maxNumberOfDays']; ?>
+                                {{ $aBooking['maxNumberOfDays'] }}
                             </td>
                             <td style="width: 30%">
-                                <?php echo $aBooking['notes']; ?>
+                                {{ $aBooking['notes'] }}
                             </td>
                             <td>
                                 <a href="<?php echo $this->action('editException', $aBooking['entryID']); ?>"><i class="icon-pencil"></i></a>
@@ -211,20 +211,20 @@ foreach ($aExceptions as $aBooking) {
 
 <div class="cottage_booker__dashboard__confirm__delete--booking hide">
     <p>
-        <?php echo t('Weet je zeker dat je deze reservering wilt annuleren?'); ?>
+    {{ t('Weet je zeker dat je deze reservering wilt annuleren?') }}
     </p>
 </div>
 <div class="cottage_booker__dashboard__confirm__delete--cancellation hide">
     <p>
-        <?php echo t('Weet je zeker dat je deze annulering wilt verwijderen?'); ?>
+    {{ t('Weet je zeker dat je deze annulering wilt verwijderen?') }}
     </p>
     <p>
-        <?php echo t('Deze gebruiker kan dan weer reserveren in deze periode.'); ?>
+    {{ t('Deze gebruiker kan dan weer reserveren in deze periode.') }}
     </p>
 </div>
 <div class="cottage_booker__dashboard__confirm__delete--exception hide">
     <p>
-        <?php echo t('Weet je zeker dat je deze uitzondering wilt verwijderen?'); ?>
+    {{ t('Weet je zeker dat je deze uitzondering wilt verwijderen?') }}
     </p>
 </div>
 <?php

@@ -1,4 +1,4 @@
 <div class="alert alert-success">
-    <?php echo t('Deze reservering is succesvol geannuleerd.'); ?>
+    {{ t('Deze reservering is succesvol geannuleerd.') }}
 </div>
-<a class="btn" href="<?php echo $this->action('reserveringen', $bID); ?>"><i class="icon-chevron-left"></i> Terug</a>
+<a class="btn" href="{{ reserveringen }}"><i class="icon-chevron-left"></i> Terug</a>

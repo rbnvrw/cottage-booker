@@ -86,6 +86,32 @@ function getBookingForm()
     return $aForm;
 }
 
+/**
+ * getExceptionForm
+ *
+ */
+function getExceptionForm()
+{
+    $aForm = [];
+
+    $oForm = Loader::helper('form');
+
+    $aSaveForm['bIDHidden'] = $oForm->hidden('bID', $aBooking['bID']);
+    $aSaveForm['startLabel'] = $oForm->label('start', t('Begindatum'));
+    $aSaveForm['startText'] = $oForm->text('start', $aBooking['start'], array('class' => 'form__exception__start'));
+    $aSaveForm['endLabel'] = $oForm->label('end', t('Einddatum'));
+    $aSaveForm['endText'] = $oForm->text('end', $aBooking['end'], array('class' => 'form__exception__end'));
+    $aSaveForm['creditsLabel'] = $oForm->label('credits', t('Kosten per dag'));
+    $aSaveForm['creditsText'] = $oForm->text('credits', $aBooking['credits'], array('class' => 'form__exception__credits'));
+    $aSaveForm['bookOnlyWeeksLabel'] = $oForm->label('bookOnlyWeeks', t('Alleen gehele week boeken'));
+    $aSaveForm['bookOnlyWeeksCheckbox'] = $oForm->checkbox('bookOnlyWeeks', 1, $aBooking['bookOnlyWeeks']);
+    $aSaveForm['maxNumberOfDaysLabel'] = $oForm->label('maxNumberOfDays', t('Maximaal aantal dagen'));
+    $aSaveForm['maxNumberOfDaysText'] = $oForm->text('maxNumberOfDays', $aBooking['maxNumberOfDays']);
+    $aSaveForm['notesLabel'] = $oForm->label('notes', t('Opmerkingen'));
+    $aSaveForm['notesTextarea'] = $oForm->textarea('notes', $aBooking['notes']);
+
+    return $aForm;
+}
 $aContext = [
     'header' => Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Cottage Booker'), t('Dit is de beheerpagina voor de Cottage Booker.')),
     'task' => $this->controller->getTask(),
@@ -94,7 +120,12 @@ $aContext = [
     'settingsTabs' => getSettingsTabs(),
     'settingsForm' => getSettingsForm(),
     'addBookingForm' => getBookingForm(),
-    'footer' => Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()
+    'footer' => Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(),
+    'reserveringen' => $this->action('reserveringen', $bID),
+    'updateBookingAction' => $this->action('updateBooking', $aBooking['entryID']),
+    'saveExceptionAction' => $this->action('saveException', $aBooking['entryID']),
+    'exceptionForm' => getExceptionForm(),
+    'usersURL' => $this->url('/dashboard/users')
 ];
 
 echo TwigTemplate::renderTemplate('dashboard', $aContext);

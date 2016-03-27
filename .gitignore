@@ -1,2 +1,9 @@
 vendor
 bower_components
+.vagrant
+application
+concrete
+index.php
+packages
+robots.txt
+updates
