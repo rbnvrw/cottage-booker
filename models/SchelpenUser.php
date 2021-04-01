@@ -1,4 +1,5 @@
 <?php
+namespace Concrete\Package\CottageBooker\Models;
 
 /**
  * Model for user who can book the cottage
@@ -10,7 +11,7 @@ class SchelpenUser
      * Fetch credits for this user
      * @param $ui
      */
-    public function setupUser($ui)
+    public static function setupUser($ui)
     {
         $oDb = Loader::db();
 

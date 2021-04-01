@@ -1,8 +1,16 @@
 <?php
+namespace Concrete\Package\CottageBooker\Block\CottageBooker;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
-class CottageBookerBlockController extends BlockController
+use \Concrete\Core\Block\BlockController;
+use \Concrete\Core\User\User;
+use \Concrete\Core\User\UserInfo;
+use \Concrete\Core\User\Group\Group;
+use \Concrete\Core\Package\Package;
+use \Concrete\Core\Page\Page;
+
+class Controller extends BlockController
 {
 
     protected $btTable = "btCottageBooker";
@@ -51,7 +59,7 @@ class CottageBookerBlockController extends BlockController
 
     public function actionNew()
     {
-        $oUser = new user();
+        $oUser = new User();
         $uId = $oUser->getUserID();
 
         $oResponse = new stdClass;
@@ -84,7 +92,7 @@ class CottageBookerBlockController extends BlockController
 
         $oResponse->credits = $this->getUserCottageBookerCredits($uId);
 
-        $js = Loader::helper('json');
+        $js = \Loader::helper('json');
         print $js->encode($oResponse);
         exit;
     }
@@ -124,7 +132,7 @@ class CottageBookerBlockController extends BlockController
 
         $oResponse->credits = $this->getUserCottageBookerCredits($uId);
 
-        $js = Loader::helper('json');
+        $js = \Loader::helper('json');
         print $js->encode($oResponse);
         exit;
     }
@@ -149,7 +157,7 @@ class CottageBookerBlockController extends BlockController
 
         $oResponse->credits = $this->getUserCottageBookerCredits($uId);
 
-        $js = Loader::helper('json');
+        $js = \Loader::helper('json');
         print $js->encode($oResponse);
         exit;
     }
@@ -177,7 +185,7 @@ class CottageBookerBlockController extends BlockController
             }
         }
 
-        $js = Loader::helper('json');
+        $js = \Loader::helper('json');
         print $js->encode($aResponse);
         exit;
     }
@@ -199,7 +207,7 @@ class CottageBookerBlockController extends BlockController
             $aResponse[$iKey]['notes'] = $aEvent['notes'];
         }
 
-        $js = Loader::helper('json');
+        $js = \Loader::helper('json');
         print $js->encode($aResponse);
         exit;
     }
@@ -222,21 +230,21 @@ class CottageBookerBlockController extends BlockController
         } else {
             $oResponse->credits = 0;
         }
-        $js = Loader::helper('json');
+        $js = \Loader::helper('json');
         print $js->encode($oResponse);
         exit;
     }
 
     public function fetchAll()
     {
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * FROM btCottageBookerBookings WHERE bID = ?";
         return $oDb->GetAll($sSql, array($this->bID));
     }
 
     public function fetchAllExceptions()
     {
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * FROM btCottageBookerExceptions WHERE bID = ?";
         return $oDb->GetAll($sSql, array($this->bID));
     }
@@ -248,7 +256,7 @@ class CottageBookerBlockController extends BlockController
         // Mag de gebruiker reserveren?
         $mCanBook = $this->canBook($sStart, $sEnd, $uId);
         if ($mCanBook === true) {
-            $oDb = Loader::db();
+            $oDb = \Loader::db();
             $sSql = "INSERT INTO btCottageBookerBookings (bID, uID, start, end, credits, notes, last_modified, persons) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?)";
 
             $dStart = date("Y-m-d", strtotime($sStart));
@@ -295,7 +303,7 @@ class CottageBookerBlockController extends BlockController
         $mCanEdit = $this->canEdit($entryID, $uId, $sStart, $sEnd);
         if ($mCanEdit === true) {
             // Oude credits ophalen
-            $oDb = Loader::db();
+            $oDb = \Loader::db();
             $sSql = "SELECT credits FROM btCottageBookerBookings WHERE bID = ? AND uID = ? AND entryID = ?";
             $iOldCredits = $oDb->GetOne($sSql, array($this->bID, $uId, $entryID));
 
@@ -340,7 +348,7 @@ class CottageBookerBlockController extends BlockController
         $mCanDelete = $this->canDelete($entryID, $uId);
         if ($mCanDelete === true) {
             // Oude booking ophalen
-            $oDb = Loader::db();
+            $oDb = \Loader::db();
             $sSql = "SELECT * FROM btCottageBookerBookings WHERE bID = ? AND uID = ? AND entryID = ?";
             $aBooking = $oDb->GetRow($sSql, array($this->bID, $uId, $entryID));
 
@@ -388,12 +396,12 @@ class CottageBookerBlockController extends BlockController
     protected function mailAdmins($sTemplate, $aParams)
     {
         // Alle admins ophalen
-        Loader::model('user_list');
+        \Loader::model('user_list');
         $userList = new UserList();
         $userList->filterByGroup(Group::getByID($this->adminGroup)->getGroupName());
         $users = $userList->get();
 
-        $mh = Loader::helper('mail');
+        $mh = \Loader::helper('mail');
         $mh->from('info@familie-kramer.nl');
 
         // Parameters
@@ -417,7 +425,7 @@ class CottageBookerBlockController extends BlockController
 
     protected function mailUser($uId, $sTemplate, $aParams)
     {
-        $mh = Loader::helper('mail');
+        $mh = \Loader::helper('mail');
         $mh->from('info@familie-kramer.nl');
 
         // Parameters
@@ -495,7 +503,7 @@ class CottageBookerBlockController extends BlockController
             }
 
             // Klopt de gebruiker?
-            $oDb = Loader::db();
+            $oDb = \Loader::db();
             $sSql = "SELECT uID, credits FROM btCottageBookerBookings WHERE bID = ? AND entryID = ?";
             $aResult = $oDb->GetRow($sSql, array($this->bID, $entryID));
             if ($aResult['uID'] != $uId) {
@@ -550,7 +558,7 @@ class CottageBookerBlockController extends BlockController
                 return $this->isLoggedIn();
             }
 
-            $oDb = Loader::db();
+            $oDb = \Loader::db();
             $sSql = "SELECT uID, start, end FROM btCottageBookerBookings WHERE bID = ? AND entryID = ?";
             $aResult = $oDb->GetRow($sSql, array($this->bID, $entryID));
             if ($aResult['uID'] != $uId) {
@@ -665,7 +673,7 @@ class CottageBookerBlockController extends BlockController
         $dStart = date("Y-m-d", strtotime($sStart));
         $dEnd = date("Y-m-d", strtotime($sEnd));
 
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * "
         . "FROM btCottageBookerExceptions "
         . "WHERE bID = ? "
@@ -727,7 +735,7 @@ class CottageBookerBlockController extends BlockController
         if ($u->IsLoggedIn()) {
             if (!$this->isAdmin()) {
                 $gUsers = Group::getById(intval($this->userGroup));
-                if ($u->inGroup($gUsers)) {
+                if ($gUsers && $u->inGroup($gUsers)) {
                     return true;
                 } else {
                     return t('U moet toegevoegd zijn aan de gebruikersgroep om te kunnen reserveren.');
@@ -758,7 +766,7 @@ class CottageBookerBlockController extends BlockController
         $dStart = date("Y-m-d", strtotime($sStart));
         $dEnd = date("Y-m-d", strtotime($sEnd));
 
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT start, end "
         . "FROM btCottageBookerCancelled "
         . "WHERE bID = ? "
@@ -786,7 +794,7 @@ class CottageBookerBlockController extends BlockController
         $dStart = date("Y-m-d", strtotime($sStart));
         $dEnd = date("Y-m-d", strtotime($sEnd));
 
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT start, end "
         . "FROM btCottageBookerBookings "
         . "WHERE bID = ? "
@@ -853,7 +861,7 @@ class CottageBookerBlockController extends BlockController
     {
         $adminPage = Page::getByPath('/dashboard/cottage_booker',
             $version = 'active');
-        $p = new Permissions($adminPage);
+        $p = new \Permissions($adminPage);
 
         if ($p->canRead()) {
             $this->set('adminPageLink', '/dashboard/cottage_booker');
@@ -880,33 +888,34 @@ class CottageBookerBlockController extends BlockController
         } else {
             $this->set('loggedIn', false);
         }
-        if (Config::get("ENABLE_USER_PROFILES")) {
+        $config = Package::getByHandle('cottage_booker')->getConfig();
+        if ($config->get("ENABLE_USER_PROFILES")) {
             $this->set('userName', '<a href="' . $this->url('/profile') . '">'
                 . $oUser->getUserName() . '</a>');
         } else {
-            $this->set('userName', $u->getUserName());
+            $this->set('userName', $oUserInfo->getUserFullName());
         }
     }
 
     protected function _buildFormVars()
     {
-        $oForm = Loader::helper('form');
+        $oForm = \Loader::helper('form');
         $this->set('formHiddenId', $oForm->hidden('cottage_booker__book-form__id'));
         $this->set('formLabelStart', $oForm->label('cottage_booker__book-form__start', t('Begindatum')));
-        $this->set('formDateStart', Loader::helper('form/date_time')->date('cottage_booker__book-form__start'));
+        $this->set('formDateStart', \Loader::helper('form/date_time')->date('cottage_booker__book-form__start'));
         $this->set('formLabelEnd', $oForm->label('cottage_booker__book-form__end', t('Einddatum')));
-        $this->set('formDateEnd', Loader::helper('form/date_time')->date('cottage_booker__book-form__end'));
+        $this->set('formDateEnd', \Loader::helper('form/date_time')->date('cottage_booker__book-form__end'));
         $this->set('formLabelCredits', $oForm->label('cottage_booker__book-form__credits', t('Kosten')));
         $this->set('formInputCredits', $oForm->text('cottage_booker__book-form__credits', '', array('class' => 'uneditable-input', 'readonly' => 'readonly')));
         $this->set('formLabelPersons', $oForm->label('cottage_booker__book-form__persons', t('Aantal personen')));
         $this->set('formInputPersons', $oForm->text('cottage_booker__book-form__persons'));
         $this->set('formLabelNotes', $oForm->label('cottage_booker__book-form__notes', t('Opmerkingen')));
         $this->set('formInputNotes', $oForm->textarea('cottage_booker__book-form__notes'));
-        $this->set('actionNew', $this->action('new'));
-        $this->set('actionFetchall', $this->action('fetchall'));
-        $this->set('actionFetchallexceptions', $this->action('fetchallexceptions'));
-        $this->set('actionUpdate', $this->action('update'));
-        $this->set('actionDelete', $this->action('delete'));
-        $this->set('actionCredits', $this->action('credits'));
+        $this->set('actionNew', $this->getActionURL('new'));
+        $this->set('actionFetchall', $this->getActionURL('fetchall'));
+        $this->set('actionFetchallexceptions', $this->getActionURL('fetchallexceptions'));
+        $this->set('actionUpdate', $this->getActionURL('update'));
+        $this->set('actionDelete', $this->getActionURL('delete'));
+        $this->set('actionCredits', $this->getActionURL('credits'));
     }
 }

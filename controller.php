@@ -1,16 +1,25 @@
 <?php
+namespace Concrete\Package\CottageBooker;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
+
+use \Concrete\Core\Package\Package;
+use \Concrete\Core\Block\BlockType\BlockType;
+use \Concrete\Core\Support\Facade\Events;
+use \Concrete\Core\Page\Single as SinglePage;
+use \Concrete\Core\Job\Job;
+
+use \Concrete\Package\CottageBooker\Models\SchelpenUser;
 
 /**
  * Main controller
  */
-class CottageBookerPackage extends Package
+class Controller extends Package
 {
 
     protected $pkgHandle = 'cottage_booker';
-    protected $appVersionRequired = '5.3.0';
-    protected $pkgVersion = '1.0';
+    protected $appVersionRequired = '8.5';
+    protected $pkgVersion = '2.0';
 
     public function getPackageDescription()
     {
@@ -28,15 +37,10 @@ class CottageBookerPackage extends Package
      */
     public function install()
     {
+        $this->setupAutoloader();
         $pkg = parent::install();
 
         $this->_installBlock($pkg);
-
-        $this->_installCredits($pkg);
-
-        $this->_installCreditsLastUpdate($pkg);
-
-        $this->_installFullName($pkg);
 
         $this->_installDashboardPage($pkg);
 
@@ -46,32 +50,13 @@ class CottageBookerPackage extends Package
     /**
      * Add extra attributes when a user is added
      */
-    public function onStart()
+    public function on_start()
     {
-        Events::extend('on_user_add', 'SchelpenUser', 'setupUser', 'packages/'
-            . $this->pkgHandle . '/models/SchelpenUser.php', array($ui));
-    }
-
-    /**
-     * Install user credits attribute
-     */
-    private function _installCredits($pkg)
-    {
-        // Install 'credits' attribute
-        Loader::model('user_attributes');
-        if (!is_object(UserAttributeKey::getByHandle('cottage_booker_credits'))) {
-            UserAttributeKey::add(
-                'NUMBER', array(
-                    'akHandle' => 'cottage_booker_credits',
-                    'akName' => t('Cottage Booker credits'),
-                    'akIsSearchable' => 0,
-                    'akIsEditable' => 1,
-                    'uakProfileEdit' => 0,
-                    'uakProfileEditRequired' => 0,
-                    'uakRegisterEdit' => 0,
-                    'uakRegisterEditRequired' => 0,
-                    'uakProfileDisplay' => 1), $pkg);
-        }
+        $this->setupAutoloader();
+        Events::addListener('on_user_add', function($event) {
+            $user = $event->getUserInfoObject();
+            SchelpenUser::setupUser($user);
+        });
     }
 
     /**
@@ -86,55 +71,11 @@ class CottageBookerPackage extends Package
     }
 
     /**
-     * Log last update time of credits
-     */
-    private function _installCreditsLastUpdate($pkg)
-    {
-        // Install 'creditsLastUpdate' attribute
-        Loader::model('user_attributes');
-        if (!is_object(UserAttributeKey::getByHandle('cottage_booker_credits_last_update'))) {
-            UserAttributeKey::add(
-                'DATE', array(
-                    'akHandle' => 'cottage_booker_credits_last_update',
-                    'akName' => t('Cottage Booker credits (last update)'),
-                    'akIsSearchable' => 0,
-                    'akIsEditable' => 0,
-                    'uakProfileEdit' => 0,
-                    'uakProfileEditRequired' => 0,
-                    'uakRegisterEdit' => 0,
-                    'uakRegisterEditRequired' => 0,
-                    'uakProfileDisplay' => 0), $pkg);
-        }
-    }
-
-    /**
-     * Install user fullname attribute
-     */
-    private function _installFullName($pkg)
-    {
-        // Install 'fullName' attribute
-        if (!is_object(UserAttributeKey::getByHandle('full_name'))) {
-            UserAttributeKey::add(
-                'TEXT', array(
-                    'akHandle' => 'full_name',
-                    'akName' => t('Full name'),
-                    'akIsSearchable' => 1,
-                    'akIsEditable' => 1,
-                    'uakProfileEdit' => 1,
-                    'uakProfileEditRequired' => 1,
-                    'uakRegisterEdit' => 1,
-                    'uakRegisterEditRequired' => 1,
-                    'uakProfileDisplay' => 1), $pkg);
-        }
-    }
-
-    /**
      * Install admin page on dashboard
      */
     private function _installDashboardPage($pkg)
     {
         // Install the single page in the dashboard
-        Loader::model('single_page');
         $oPage = SinglePage::add('/dashboard/cottage_booker', $pkg);
         if ($oPage) {
             $oPage->update(array('cName' => t('Cottage Booker'),
@@ -148,7 +89,16 @@ class CottageBookerPackage extends Package
      */
     private function _installCreditsUpdateJob($pkg)
     {
-        Loader::model("job");
         Job::installByPackage("update_cottagebooker_credits", $pkg);
+    }
+
+    /**
+     * Configure the autoloader
+     */
+    private function setupAutoloader()
+    {
+        if (file_exists($this->getPackagePath() . '/vendor')) {
+            require_once $this->getPackagePath() . '/vendor/autoload.php';
+        }
     }
 }

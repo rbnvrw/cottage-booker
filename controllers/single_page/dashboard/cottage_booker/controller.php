@@ -1,4 +1,7 @@
 <?php
+namespace Concrete\Package\CottageBooker\Controller\SinglePage\Dashboard\CottageBookerDashboard;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 /**
@@ -6,7 +9,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  *
  * @see Controller
  */
-class DashboardCottageBookerController extends Controller
+class Controller extends DashboardPageController
 {
 
     protected $pkgHandle = 'cottage_booker';
