@@ -6,7 +6,7 @@
                     <span class="badge badge-info cottage_booker-i-user-credits">{{ userCredits }}</span>
                     <span class="cottage_booker-i-user-credits--suffix">{{ (userCredits == 1) ? 'schelp' : ' schelpen' }}.
                     {% if (isRegistered) %}
-                        {% if !empty(adminPageLink) %}
+                        {% if not empty(adminPageLink) %}
                             (<a href="{{ adminPageLink }}">{{ t('instellingen') }}</a> /
                         {% endif %}
                         <a href="{{ logoutUrl }}">{{ t('uitloggen') }}</a>)
@@ -36,7 +36,7 @@
                     <span class="add-on">{{ t('schelpen') }}</span>
                     <span class="help-block">
                             Het aantal schelpen wordt automatisch berekend. Een weekdag kost
-                            <span class="badge badge-info">{{ schelpenPerDag }}</span> {{ ($schelpenPerDag == 1) ? 'schelp' : ' schelpen' }}, een weekenddag kost <span class="badge badge-info">{{ schelpenPerWeekendDag }}</span> {{ ($schelpenPerDag == 1) ? 'schelp' : ' schelpen' }}.
+                            <span class="badge badge-info">{{ schelpenPerDag }}</span> {{ (schelpenPerDag == 1) ? 'schelp' : ' schelpen' }}, een weekenddag kost <span class="badge badge-info">{{ schelpenPerWeekendDag }}</span> {{ (schelpenPerDag == 1) ? 'schelp' : ' schelpen' }}.
                     </span>
                 </div>
                 <div class="control-group">

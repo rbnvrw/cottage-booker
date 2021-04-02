@@ -9,7 +9,7 @@ use \Concrete\Core\Support\Facade\Events;
 use \Concrete\Core\Page\Single as SinglePage;
 use \Concrete\Core\Job\Job;
 
-use \Concrete\Package\CottageBooker\Models\SchelpenUser;
+use Models\SchelpenUser;
 
 /**
  * Main controller
@@ -18,8 +18,11 @@ class Controller extends Package
 {
 
     protected $pkgHandle = 'cottage_booker';
-    protected $appVersionRequired = '8.5';
+    protected $appVersionRequired = '8.0';
     protected $pkgVersion = '2.0';
+    protected $pkgAutoloaderRegistries = array(
+        'lib' => '\Concrete\Package\CottageBooker\Lib'
+    );
 
     public function getPackageDescription()
     {
@@ -37,7 +40,6 @@ class Controller extends Package
      */
     public function install()
     {
-        $this->setupAutoloader();
         $pkg = parent::install();
 
         $this->_installBlock($pkg);
@@ -52,7 +54,6 @@ class Controller extends Package
      */
     public function on_start()
     {
-        $this->setupAutoloader();
         Events::addListener('on_user_add', function($event) {
             $user = $event->getUserInfoObject();
             SchelpenUser::setupUser($user);
@@ -92,13 +93,4 @@ class Controller extends Package
         Job::installByPackage("update_cottagebooker_credits", $pkg);
     }
 
-    /**
-     * Configure the autoloader
-     */
-    private function setupAutoloader()
-    {
-        if (file_exists($this->getPackagePath() . '/vendor')) {
-            require_once $this->getPackagePath() . '/vendor/autoload.php';
-        }
-    }
 }

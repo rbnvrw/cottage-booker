@@ -1,4 +1,4 @@
-{{ settingTabs }}
+{{ settingsTabs | raw }}
 <div id="ccm-tab-content-general" class="ccm-tab-content">
     <form action="{{ settingsForm.action }}" method="POST">
         <fieldset>
@@ -6,32 +6,32 @@
                 {{ t('Systeem') }}
             </legend>
             <div class="control-group">
-                {{ settingsForm.nameLabel }} {{ settingsForm.nameText }}
+                {{ settingsForm.nameLabel | raw }} {{ settingsForm.nameText | raw }}
             </div>
             <div class="control-group">
-                {{ settingsForm.adminLabel }} {{ settingsForm.adminSelect }}
+                {{ settingsForm.adminLabel | raw }} {{ settingsForm.adminSelect | raw }}
                 <span class="help-inline">{{ t('De groep van gebruikers die reserveringen mogen aanpassen.') }}</span>
             </div>
             <div class="control-group">
-                {{ settingsForm.userLabel }} {{ settingsForm.userSelect }}
+                {{ settingsForm.userLabel | raw }} {{ settingsForm.userSelect | raw }}
                 <span class="help-inline">{{ t('De groep van gebruikers die reserveringen mogen maken.') }}</span>
             </div>
             <legend style="margin-bottom: 0;">
                 {{ t('Reserveringen') }}
             </legend>
             <div class="control-group">
-                {{ settingsForm.canCancelLabel }}
+                {{ settingsForm.canCancelLabel | raw }}
                 <label class="radio">
-                        {{ settingsForm.canCancelRadio }}
+                        {{ settingsForm.canCancelRadio | raw }}
                         {{ t('Geannuleerd verblijf kan opnieuw geboekt worden.') }}
                             </label>
                 <label class="radio">
-                        {{ settingsForm.cannotCancelRadio }}
+                        {{ settingsForm.cannotCancelRadio | raw }}
                         {{ t('Geannuleerd verblijf kan niet opnieuw geboekt worden.') }}
                             </label>
             </div>
             <div class="control-group">
-                {{ settingsForm.changeDayLabel }} {{ settingsForm.changeDaySelect }}
+                {{ settingsForm.changeDayLabel | raw }} {{ settingsForm.changeDaySelect | raw }}
                 <span class="help-inline">{{ t('Op de wisseldag mogen twee reserveringen overlappen.') }}</span>
             </div>
             <div class="form-actions">
@@ -44,16 +44,16 @@
     <form action="{{ settingsForm.action }}" method="POST">
         <fieldset>
             <div class="control-group">
-                {{ settingsForm.creditsPerWeekDayLabel }} {{ settingsForm.creditsPerWeekDayText }}
+                {{ settingsForm.creditsPerWeekDayLabel | raw }} {{ settingsForm.creditsPerWeekDayText | raw }}
             </div>
             <div class="control-group">
-                {{ settingsForm.creditsPerWeekendDayLabel }} {{ settingsForm.creditsPerWeekendDayText }}
+                {{ settingsForm.creditsPerWeekendDayLabel | raw }} {{ settingsForm.creditsPerWeekendDayText | raw }}
             </div>
             <div class="control-group">
-                {{ settingsForm.userCreditsAnnualLabel }} {{ settingsForm.userCreditsAnnualText }}
+                {{ settingsForm.userCreditsAnnualLabel | raw }} {{ settingsForm.userCreditsAnnualText | raw }}
             </div>
             <div class="control-group">
-                {{ settingsForm.userCreditsMax }} {{ settingsForm.userCreditsMax }}
+                {{ settingsForm.userCreditsMax | raw }} {{ settingsForm.userCreditsMax | raw }}
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i> {{ t('Opslaan') }}</button>

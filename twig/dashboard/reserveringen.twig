@@ -1,212 +1,179 @@
-<div role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active">
-            <a href="#reserveringen" aria-controls="reserveringen" role="tab" data-toggle="tab">
-                {{ t('Reserveringen') }}
-            </a>
-        </li>
-        <li role="presentation">
-            <a href="#annuleringen" aria-controls="annuleringen" role="tab" data-toggle="tab">
-                {{ t('Annuleringen') }}
-            </a>
-        </li>
-        <li role="presentation">
-            <a href="#uitzonderingen" aria-controls="uitzonderingen" role="tab" data-toggle="tab">
-                {{ t('Uitzonderingen') }}
-            </a>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active in fade" id="reserveringen">
-            <p>
-                <a class="btn" href="<?php echo $this->action('addBooking', $bID); ?>"><i class="icon-plus"></i> Reservering toevoegen</a>
-            </p>
-            <table class="table table-striped table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>
-                            {{ t('Door') }}
-                        </th>
-                        <th>
-                            {{ t('Begin') }}
-                        </th>
-                        <th>
-                            {{ t('Eind') }}
-                        </th>
-                        <th>
-                            {{ t('Kosten') }}
-                        </th>
-                        <th>
-                            {{ t('Opmerkingen') }}
-                        </th>
-                        <th>
-                            {{ t('Personen') }}
-                        </th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-foreach ($aBookings as $aBooking) {
-            ?>
-                        <tr>
-                            <td>
-                                {{ $aBooking['user'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['start'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['end'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['credits'] }}
-                            </td>
-                            <td style="width: 50%">
-                                {{ $aBooking['notes'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['persons'] }}
-                            </td>
-                            <td>
-                                <a href="<?php echo $this->action('editBooking', $aBooking['entryID']); ?>"><i class="icon-pencil"></i></a>
-                                <a class="cottage_booker__dashboard__button--delete-booking" href="<?php echo $this->action('cancelBooking', $aBooking['entryID']); ?>"><i class="icon-trash"></i></a>
-                            </td>
-                        </tr>
-                        <?php
-}
-    ?>
-                </tbody>
-            </table>
-        </div>
-        <div role="tabpanel" class="tab-pane fade" id="annuleringen">
-            <table class="table table-striped table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>
-                            {{ t('Door') }}
-                        </th>
-                        <th>
-                            {{ t('Begin') }}
-                        </th>
-                        <th>
-                            {{ t('Eind') }}
-                        </th>
-                        <th>
-                            {{ t('Kosten') }}
-                        </th>
-                        <th>
-                            {{ t('Opmerkingen') }}
-                        </th>
-                        <th>
-                            {{ t('Personen') }}
-                        </th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-foreach ($aCancelled as $aBooking) {
-        ?>
-                        <tr>
-                            <td>
-                                {{ $aBooking['user'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['start'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['end'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['credits'] }}
-                            </td>
-                            <td style="width: 50%">
-                                {{ $aBooking['notes'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['persons'] }}
-                            </td>
-                            <td>
-                                <a class="cottage_booker__dashboard__button--delete-cancellation" href="<?php echo $this->action('removeCancellation', $aBooking['entryID']); ?>"><i class="icon-trash"></i></a>
-                            </td>
-                        </tr>
-                        <?php
-}
-    ?>
-                </tbody>
-            </table>
-        </div>
-        <div role="tabpanel" class="tab-pane fade" id="uitzonderingen">
-            <p>
-                <a class="btn" href="<?php echo $this->action('addException', $bID); ?>"><i class="icon-plus"></i> Uitzondering toevoegen</a>
-            </p>
-            <table class="table table-striped table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>
-                            {{ t('Door') }}
-                        </th>
-                        <th>
-                            {{ t('Begin') }}
-                        </th>
-                        <th>
-                            {{ t('Eind') }}
-                        </th>
-                        <th>
-                            {{ t('Kosten per dag') }}
-                        </th>
-                        <th>
-                            {{ t('Alleen week boeken') }}
-                        </th>
-                        <th>
-                            {{ t('Maximum aantal dagen') }}
-                        </th>
-                        <th>
-                            {{ t('Opmerkingen') }}
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-foreach ($aExceptions as $aBooking) {
-        ?>
-                        <tr>
-                            <td>
-                                {{ $aBooking['user'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['start'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['end'] }}
-                            </td>
-                            <td>
-                                {{ $aBooking['credits'] }}
-                            </td>
-                            <td>
-                                {{ (($aBooking['bookOnlyWeeks'] == 1) ? 'Ja' : 'Nee') }}
-                            </td>
-                            <td>
-                                {{ $aBooking['maxNumberOfDays'] }}
-                            </td>
-                            <td style="width: 30%">
-                                {{ $aBooking['notes'] }}
-                            </td>
-                            <td>
-                                <a href="<?php echo $this->action('editException', $aBooking['entryID']); ?>"><i class="icon-pencil"></i></a>
-                                <a class="cottage_booker__dashboard__button--delete-exception" href="<?php echo $this->action('deleteException', $aBooking['entryID']); ?>"><i class="icon-trash"></i></a>
-                            </td>
-                        </tr>
-                        <?php
-}
-    ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
+{{ bookingTabs | raw }}
+<div id="ccm-tab-content-bookings" class="ccm-tab-content">
+    <p>
+        <a class="btn" href="{{ action('addBooking', bID) }}"><i class="icon-plus"></i> Reservering toevoegen</a>
+    </p>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>
+                    {{ t('Door') }}
+                </th>
+                <th>
+                    {{ t('Begin') }}
+                </th>
+                <th>
+                    {{ t('Eind') }}
+                </th>
+                <th>
+                    {{ t('Kosten') }}
+                </th>
+                <th>
+                    {{ t('Opmerkingen') }}
+                </th>
+                <th>
+                    {{ t('Personen') }}
+                </th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for booking in aBookings %}
+                <tr>
+                    <td>
+                        {{ booking['user'] }}
+                    </td>
+                    <td>
+                        {{ booking['start'] }}
+                    </td>
+                    <td>
+                        {{ booking['end'] }}
+                    </td>
+                    <td>
+                        {{ booking['credits'] }}
+                    </td>
+                    <td style="width: 50%">
+                        {{ booking['notes'] }}
+                    </td>
+                    <td>
+                        {{ booking['persons'] }}
+                    </td>
+                    <td>
+                        <a href="{{ action('editBooking', booking['entryID']) }}"><i class="icon-pencil"></i></a>
+                        <a class="cottage_booker__dashboard__button--delete-booking" href="<?php echo $this->action('cancelBooking', booking['entryID']); ?>"><i class="icon-trash"></i></a>
+                    </td>
+                </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div id="ccm-tab-content-cancellations" class="ccm-tab-content">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>
+                    {{ t('Door') }}
+                </th>
+                <th>
+                    {{ t('Begin') }}
+                </th>
+                <th>
+                    {{ t('Eind') }}
+                </th>
+                <th>
+                    {{ t('Kosten') }}
+                </th>
+                <th>
+                    {{ t('Opmerkingen') }}
+                </th>
+                <th>
+                    {{ t('Personen') }}
+                </th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for booking in aCancelled %}
+                <tr>
+                    <td>
+                        {{ booking['user'] }}
+                    </td>
+                    <td>
+                        {{ booking['start'] }}
+                    </td>
+                    <td>
+                        {{ booking['end'] }}
+                    </td>
+                    <td>
+                        {{ booking['credits'] }}
+                    </td>
+                    <td style="width: 50%">
+                        {{ booking['notes'] }}
+                    </td>
+                    <td>
+                        {{ booking['persons'] }}
+                    </td>
+                    <td>
+                        <a class="cottage_booker__dashboard__button--delete-cancellation" href="<?php echo $this->action('removeCancellation', booking['entryID']); ?>"><i class="icon-trash"></i></a>
+                    </td>
+                </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div id="ccm-tab-content-exceptions" class="ccm-tab-content">
+    <p>
+        <a class="btn" href="<?php echo $this->action('addException', $bID); ?>"><i class="icon-plus"></i> Uitzondering toevoegen</a>
+    </p>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>
+                    {{ t('Door') }}
+                </th>
+                <th>
+                    {{ t('Begin') }}
+                </th>
+                <th>
+                    {{ t('Eind') }}
+                </th>
+                <th>
+                    {{ t('Kosten per dag') }}
+                </th>
+                <th>
+                    {{ t('Alleen week boeken') }}
+                </th>
+                <th>
+                    {{ t('Maximum aantal dagen') }}
+                </th>
+                <th>
+                    {{ t('Opmerkingen') }}
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for booking in aExceptions %}
+                <tr>
+                    <td>
+                        {{ booking['user'] }}
+                    </td>
+                    <td>
+                        {{ booking['start'] }}
+                    </td>
+                    <td>
+                        {{ booking['end'] }}
+                    </td>
+                    <td>
+                        {{ booking['credits'] }}
+                    </td>
+                    <td>
+                        {{ ((booking['bookOnlyWeeks'] == 1) ? 'Ja' : 'Nee') }}
+                    </td>
+                    <td>
+                        {{ booking['maxNumberOfDays'] }}
+                    </td>
+                    <td style="width: 30%">
+                        {{ booking['notes'] }}
+                    </td>
+                    <td>
+                        <a href="<?php echo $this->action('editException', booking['entryID']); ?>"><i class="icon-pencil"></i></a>
+                        <a class="cottage_booker__dashboard__button--delete-exception" href="<?php echo $this->action('deleteException', booking['entryID']); ?>"><i class="icon-trash"></i></a>
+                    </td>
+                </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 <div class="cottage_booker__dashboard__confirm__delete--booking hide">

@@ -10,19 +10,19 @@
     </div>
 {% endif %}
 
-{% if (task == 'settings' || task == 'save') %}
+{% if (task == 'settings' or task == 'save') %}
     {% include 'dashboard/settings.twig' %}
 {% elseif task == 'reserveringen' %}
-    {% include 'dashboard/reservingen.twig' %}
+    {% include 'dashboard/reserveringen.twig' %}
 {% elseif task == 'addBooking' %}
     {% include 'dashboard/addBooking.twig' %}
-{% elseif (task == 'editBooking' || task == 'updateBooking') %}
+{% elseif (task == 'editBooking' or task == 'updateBooking') %}
     {% include 'dashboard/editBooking.twig' %}
 {% elseif task == 'cancelBooking' %}
     {% include 'dashboard/cancelBooking.twig' %}
 {% elseif task == 'removeCancellation' %}
     {% include 'dashboard/removeCancellation.twig' %}
-{% elseif (task == 'addException' || task == 'saveException' || task == 'editException') %}
+{% elseif (task == 'addException' or task == 'saveException' or task == 'editException') %}
     {% include 'dashboard/editException.twig' %}
 {% elseif task == 'deleteException' %}
     {% include 'dashboard/deleteException.twig' %}

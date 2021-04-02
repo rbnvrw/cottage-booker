@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\CottageBooker\Controller\SinglePage\Dashboard\CottageBookerDashboard;
+namespace Concrete\Package\CottageBooker\Controller\SinglePage\Dashboard;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 
 defined('C5_EXECUTE') or die(_("Access Denied."));
@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
  *
  * @see Controller
  */
-class Controller extends DashboardPageController
+class CottageBooker extends DashboardPageController
 {
 
     protected $pkgHandle = 'cottage_booker';
@@ -31,23 +31,20 @@ class Controller extends DashboardPageController
      */
     public function settings($bId, $sMessage = '')
     {
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
 
         // Fetch general settings
         $sSql = "SELECT * FROM btCottageBooker WHERE bID = ?";
         $aResult = $oDb->getRow($sSql, array(intval($bId)));
         $this->set('aBlockSettings', $aResult);
 
-        // Fetch all user groups
-        Loader::model('search/group');
-
         $aGroupSelect = array();
+        // Fetch all user groups
+        $oGroupList = new \Concrete\Core\User\Group\GroupList();
+        $aGroups = $oGroupList->getResults();
 
-        $oGroupSearch = new GroupSearch();
-        $aGroups = $oGroupSearch->getPage();
-
-        foreach ($aGroups as $aGroup) {
-            $aGroupSelect[$aGroup['gID']] = $aGroup['gName'];
+        foreach ($aGroups as $oGroup) {
+            $aGroupSelect[$oGroup->getGroupID()] = $oGroup->getGroupName();
         }
 
         $this->set('aGroups', $aGroupSelect);
@@ -75,7 +72,7 @@ class Controller extends DashboardPageController
      */
     public function save($bId)
     {
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
 
         $aData = $_POST;
 
@@ -119,7 +116,7 @@ class Controller extends DashboardPageController
     public function reserveringen($bId, $sMessage = '')
     {
         // Get all bookings
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * FROM btCottageBookerBookings WHERE bID = ? ORDER BY start DESC";
         $aBookings = $oDb->GetAll($sSql, array($bId));
         foreach ($aBookings as $iKey => $aBooking) {
@@ -155,7 +152,7 @@ class Controller extends DashboardPageController
         $this->set('bID', $bId);
 
         // JS toevoegen
-        $html = Loader::helper('html');
+        $html = \Loader::helper('html');
         $this->addHeaderItem($html->javascript('bootstrap-tab.js', $this->pkgHandle));
         $this->addHeaderItem($html->javascript('dashboard_functions.js', $this->pkgHandle));
 
@@ -171,7 +168,7 @@ class Controller extends DashboardPageController
     {
         date_default_timezone_set('UTC');
 
-        Loader::model('user_list');
+        \Loader::model('user_list');
         $ul = new UserList();
 
         $oUsers = $ul->get();
@@ -184,7 +181,7 @@ class Controller extends DashboardPageController
         $this->set('aUsers', $aUsers);
 
         // Oude booking ophalen
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * FROM btCottageBookerBookings WHERE entryID = ?";
         $aBooking = $oDb->GetRow($sSql, array($entryID));
         $this->set('aBooking', $aBooking);
@@ -199,7 +196,7 @@ class Controller extends DashboardPageController
     {
         date_default_timezone_set('UTC');
 
-        Loader::model('user_list');
+        \Loader::model('user_list');
         $ul = new UserList();
 
         $oUsers = $ul->get();
@@ -223,7 +220,7 @@ class Controller extends DashboardPageController
     {
         date_default_timezone_set('UTC');
 
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
 
         $aData = $_POST;
 
@@ -271,7 +268,7 @@ class Controller extends DashboardPageController
     public function updateBooking($entryID)
     {
         // Oude booking ophalen
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * FROM btCottageBookerBookings WHERE entryID = ?";
         $aBooking = $oDb->GetRow($sSql, array($entryID));
 
@@ -324,7 +321,7 @@ class Controller extends DashboardPageController
         date_default_timezone_set('UTC');
 
         // Oude booking ophalen
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * FROM btCottageBookerBookings WHERE entryID = ?";
         $aBooking = $oDb->GetRow($sSql, array($entryID));
 
@@ -356,12 +353,12 @@ class Controller extends DashboardPageController
         date_default_timezone_set('UTC');
 
         // Oude booking ophalen
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * FROM btCottageBookerCancelled WHERE entryID = ?";
         $aBooking = $oDb->GetRow($sSql, array($entryID));
 
         // Verwijderen
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "DELETE FROM btCottageBookerCancelled WHERE entryID = ? LIMIT 1";
         $aParams = array($entryID);
         $oDb->Execute($sSql, $aParams);
@@ -401,7 +398,7 @@ class Controller extends DashboardPageController
         date_default_timezone_set('UTC');
 
         // Oude booking ophalen
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * FROM btCottageBookerExceptions WHERE entryID = ?";
         $aBooking = $oDb->GetRow($sSql, array($entryID));
 
@@ -415,7 +412,7 @@ class Controller extends DashboardPageController
      */
     public function saveException($entryID = null)
     {
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
 
         $aData = $_POST;
 
@@ -502,12 +499,12 @@ class Controller extends DashboardPageController
         date_default_timezone_set('UTC');
 
         // Oude booking ophalen
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * FROM btCottageBookerExceptions WHERE entryID = ?";
         $aBooking = $oDb->GetRow($sSql, array($entryID));
 
         // Verwijderen
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "DELETE FROM btCottageBookerExceptions WHERE entryID = ? LIMIT 1";
         $aParams = array($entryID);
         $oDb->Execute($sSql, $aParams);
@@ -526,11 +523,11 @@ class Controller extends DashboardPageController
     {
         $aBlocks = array();
 
-        $oDb = Loader::db();
+        $oDb = \Loader::db();
         $sSql = "SELECT * FROM btCottageBooker ORDER BY cottageName ASC";
         $aBlockRows = $oDb->GetAll($sSql);
 
-        $oNav = Loader::helper('navigation');
+        $oNav = \Loader::helper('navigation');
 
         foreach ($aBlockRows as $iKey => $aBlockRow) {
             $sSql = "SELECT "
@@ -546,7 +543,7 @@ class Controller extends DashboardPageController
             // Look for page the block is on
             $sSql = "SELECT `cID` FROM `CollectionVersionBlocks` WHERE `bID` = ?";
             $iPage = $oDb->getOne($sSql, array($aBlockRow['bID']));
-            $oPage = Page::getById(intval($iPage));
+            $oPage = \Page::getById(intval($iPage));
             $aBlocks[$iKey]['page'] = $oNav->getCollectionURL($oPage);
         }
 
@@ -571,8 +568,8 @@ class Controller extends DashboardPageController
      */
     protected function getCurrentUrl()
     {
-        $currentPage = Page::getCurrentPage();
-        Loader::helper('navigation');
+        $currentPage = \Page::getCurrentPage();
+        \Loader::helper('navigation');
         return NavigationHelper::getLinkToCollection($currentPage, true);
     }
 }

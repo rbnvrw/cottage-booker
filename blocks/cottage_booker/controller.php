@@ -9,6 +9,7 @@ use \Concrete\Core\User\UserInfo;
 use \Concrete\Core\User\Group\Group;
 use \Concrete\Core\Package\Package;
 use \Concrete\Core\Page\Page;
+use Concrete\Package\CottageBooker\TwigTemplate;
 
 class Controller extends BlockController
 {

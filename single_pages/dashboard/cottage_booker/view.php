@@ -12,19 +12,33 @@ function getSettingsTabs()
         array('costs', t('Kosten')),
     );
 
-    return Loader::helper('concrete/interface')->tabs($aTabs);
+    $sCode = Core::make('helper/concrete/ui')->tabs($aTabs);
+    return $sCode;
+}
+
+function getBookingTabs()
+{
+    $aTabs = array(
+        array('bookings', t('Reserveringen'), true),
+        array('cancellations', t('Annuleringen')),
+        array('exceptions', t('Uitzonderingen')),
+    );
+
+    $sCode = Core::make('helper/concrete/ui')->tabs($aTabs);
+    return $sCode;
 }
 
 /**
  * getSettingsForm
+ * @param Concrete\Core\Page\View\PageView $oPageView
  *
  */
-function getSettingsForm()
+function getSettingsForm($oPageView, $aBlockSettings, $aGroups, $aDays)
 {
     $aSettingsForm = [];
 
-    $oForm = Loader::helper('form');
-    $aSettingsForm['action'] = $this->action('save', $aBlockSettings['bID']);
+    $oForm = \Loader::helper('form');
+    $aSettingsForm['action'] = $oPageView->action('save', $aBlockSettings['bID']);
 
     $aSettingsForm['nameLabel'] = $oForm->label('cottageName', t('Naam'));
     $aSettingsForm['nameText'] = $oForm->text('cottageName', $aBlockSettings['cottageName']);
@@ -59,16 +73,17 @@ function getSettingsForm()
 
 /**
  * getBookingForm
+ * @param Concrete\Core\Page\View\PageView $oPageView
  *
  */
-function getBookingForm()
+function getBookingForm($oPageView, $bID, $aUsers)
 {
     $aForm = [];
 
-    $oForm = Loader::helper('form');
+    $oForm = \Loader::helper('form');
 
-    $aForm['action'] = $this->action('saveBooking', $bID);
-    $aForm['reserveringAction'] = $this->action('reserveringen', $bID);
+    $aForm['action'] = $oPageView->action('saveBooking', $bID);
+    $aForm['reserveringAction'] = $oPageView->action('reserveringen', $bID);
 
     $aSaveForm['uIDLabel'] = $oForm->label('uID', t('Gebruiker'));
     $aSaveForm['uIDSelect'] = $oForm->select('uID', $aUsers);
@@ -90,11 +105,11 @@ function getBookingForm()
  * getExceptionForm
  *
  */
-function getExceptionForm()
+function getExceptionForm($aBooking)
 {
     $aForm = [];
 
-    $oForm = Loader::helper('form');
+    $oForm = \Loader::helper('form');
 
     $aSaveForm['bIDHidden'] = $oForm->hidden('bID', $aBooking['bID']);
     $aSaveForm['startLabel'] = $oForm->label('start', t('Begindatum'));
@@ -112,20 +127,24 @@ function getExceptionForm()
 
     return $aForm;
 }
+
 $aContext = [
-    'header' => Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Cottage Booker'), t('Dit is de beheerpagina voor de Cottage Booker.')),
+    'header' => \Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Cottage Booker'), t('Dit is de beheerpagina voor de Cottage Booker.')),
     'task' => $this->controller->getTask(),
     'error' => $error,
     'message' => $message,
     'settingsTabs' => getSettingsTabs(),
-    'settingsForm' => getSettingsForm(),
-    'addBookingForm' => getBookingForm(),
-    'footer' => Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(),
+    'bookingTabs' => getBookingTabs(),
+    'settingsForm' => getSettingsForm($this, $aBlockSettings, $aGroups, $aDays),
+    'addBookingForm' => getBookingForm($this, $bID, $aUsers),
+    'footer' => \Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(),
     'reserveringen' => $this->action('reserveringen', $bID),
     'updateBookingAction' => $this->action('updateBooking', $aBooking['entryID']),
     'saveExceptionAction' => $this->action('saveException', $aBooking['entryID']),
-    'exceptionForm' => getExceptionForm(),
-    'usersURL' => $this->url('/dashboard/users')
+    'exceptionForm' => getExceptionForm($aBooking),
+    'usersURL' => $this->url('/dashboard/users'),
+    'blocks' => $aBlocks,
+    'bID' => $bID
 ];
 
-echo TwigTemplate::renderTemplate('dashboard', $aContext);
+echo Concrete\Package\CottageBooker\Lib\TwigTemplate::renderTemplate('dashboard/dashboard.twig', $aContext, $this);
