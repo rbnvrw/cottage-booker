@@ -19,9 +19,9 @@ Opmerkingen:
 Wij wensen u een prettig verblijf in Callantsoog!
 
 %s',
-    $sFullName,
-    $sStart,
-    $sEnd,
-    $iPersons,
-    $sNotes,
-    BASE_URL);
+$sFullName,
+$sStart,
+$sEnd,
+$iPersons,
+$sNotes,
+BASE_URL);

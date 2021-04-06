@@ -15,11 +15,11 @@ Opmerkingen:
 
 Zie %s/dashboard/cottage_booker/
 ',
-    $sFullName,
-    $sEmail,
-    $sStart,
-    $sEnd,
-    $iPersons,
-    $sNotes,
-    BASE_URL,
-    $iBookingId);
+$sFullName,
+$sEmail,
+$sStart,
+$sEnd,
+$iPersons,
+$sNotes,
+BASE_URL,
+$iBookingId);
