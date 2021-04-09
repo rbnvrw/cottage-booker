@@ -91,7 +91,11 @@ class DashboardCottageBookerController extends Controller {
         foreach ($aBookings as $iKey => $aBooking){
                         if(!empty($aBooking['uID'])){
                                 $oUserInfo = UserInfo::getByID($aBooking['uID']);
-                                $aBookings[$iKey]['user'] = $oUserInfo->getUserFullName();
+                                if ($oUserInfo != null) {
+                                    $aBookings[$iKey]['user'] = $oUserInfo->getUserFullName();
+                                } else {
+                                    $aBookings[$iKey]['user'] = 'Onbekende gebruiker met ID ' . $aBooking['uID'];
+                                }
                         }
         }
         $this->set('aBookings', $aBookings);
@@ -102,7 +106,11 @@ class DashboardCottageBookerController extends Controller {
         foreach ($aCancelled as $iKey => $aBooking){
             if(!empty($aBooking['uID'])){
                                 $oUserInfo = UserInfo::getByID($aBooking['uID']);
-                                $aCancelled[$iKey]['user'] = $oUserInfo->getUserFullName();
+                                if ($oUserInfo != null) {
+                                    $aCancelled[$iKey]['user'] = $oUserInfo->getUserFullName();
+                                } else {
+                                    $aCancelled[$iKey]['user'] = 'Onbekende gebruiker met ID ' . $aBooking['uID'];
+                                }
                         }
         }
         $this->set('aCancelled', $aCancelled);
@@ -113,7 +121,11 @@ class DashboardCottageBookerController extends Controller {
         foreach ($aExceptions as $iKey => $aBooking){
             if(!empty($aBooking['uID'])){
                                 $oUserInfo = UserInfo::getByID($aBooking['uID']);
-                                $aExceptions[$iKey]['user'] = $oUserInfo->getUserFullName();
+                                if ($oUserInfo != null) {
+                                    $aExceptions[$iKey]['user'] = $oUserInfo->getUserFullName();
+                                } else {
+                                    $aExceptions[$iKey]['user'] = 'Onbekende gebruiker met ID ' . $aBooking['uID'];
+                                }
                         }
         }
         $this->set('aExceptions', $aExceptions);
